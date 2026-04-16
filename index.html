@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  the4am.finance — ENHANCED EDITION v2.1
+  ============================================================
+  NEW FEATURES ADDED:
+  ✅ AI Newsletter Generator (ADMIN-ONLY — password protected, hidden from public)
+  ✅ Newsletter Archive (cumulative, searchable, filterable)
+  ✅ Economic News Feed (auto-fetching market-moving events)
+  ✅ Economic Calendar (upcoming high-impact events)
+  ✅ Fear & Greed Indicator (visual sentiment gauge)
+  ✅ Dark/Light Mode Toggle
+  ✅ Reading Progress Bar
+  ✅ Newsletter Search & Filter by topic
+  ✅ Issue Rating System (reader feedback)
+  ✅ Estimated Read Time on articles
+
+  🚀 TO DEPLOY: Same 3-step Netlify process
+  ============================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>the4am.finance — Wake Up Before The Market Does</title>
+  <meta name="description" content="the4am.finance is a sharp, independent finance newsletter covering macro, India markets, equities, and market-moving news before the trading day begins.">
+  <meta property="og:title" content="the4am.finance — Wake Up Before The Market Does">
+  <meta property="og:description" content="Sharp, independent finance newsletter delivered at 4AM — before the noise, before the hype.">
+  <meta property="og:url" content="https://the4am.finance">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://the4am.finance">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231a3a5c'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' font-family='Georgia, serif' font-size='28' fill='%23c9a84c'%3E4AM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Light mode (default) */
+    :root {
+      --black: #faf6ee; --deep: #eef2f7; --gold: #c9a84c; --gold-light: #e8c96a;
+      --mustard: #1a3a5c; --mustard-dark: #0f2740; --mustard-light: #2a5080;
+      --navy: #1a3a5c; --navy-light: #2a5080; --navy-dark: #0f2740;
+      --cream: #0f1f30; --dim: #4a6080; --red: #c0392b; --green: #1e8449;
+      --gold-accent: #c9a84c;
+      --card-bg: rgba(26,58,92,0.04); --border: rgba(26,58,92,0.14);
+    }
+    /* Dark mode — auto applied when system is set to dark */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --black: #0f0e0b; --deep: #141208; --gold: #c9a84c; --gold-light: #e8c96a;
+        --mustard: #c9a84c; --mustard-dark: #a8893c; --mustard-light: #e8c96a;
+        --navy: #c9a84c; --navy-light: #e8c96a; --navy-dark: #a8893c;
+        --cream: #f0ead8; --dim: #7a6e5e; --red: #e74c3c; --green: #2ecc71;
+        --card-bg: rgba(255,255,255,0.02); --border: rgba(201,168,76,0.14);
+      }
+      nav { background: rgba(15,14,11,0.95) !important; }
+      body.light-mode nav { background: rgba(15,14,11,0.95) !important; }
+      .pre-title { color: #f0ead8 !important; }
+      .pre-sub { color: #7a6e5e !important; }
+      .pre-status { color: #7a6e5e !important; }
+      .sun-circle { stroke: #f0ead8 !important; }
+      .sun-ray { stroke: #f0ead8 !important; }
+      #preloader { background: #0f0e0b !important; }
+      .pre-divider-line { background: rgba(201,168,76,0.35) !important; }
+      .nav-logo { color: #c9a84c !important; }
+      .nav-links a { color: rgba(240,234,216,0.7) !important; }
+      .nav-links a:hover { color: #f0ead8 !important; }
+      .theme-toggle { background: rgba(255,255,255,0.05) !important; border-color: rgba(201,168,76,0.3) !important; color: rgba(240,234,216,0.6) !important; }
+    }
+    /* Manual override class — user clicked the toggle */
+    body.light-mode {
+      --black: #faf6ee; --deep: #f3ede0; --cream: #1a1410; --dim: #5a4e3e;
+      --mustard: #b8860b; --card-bg: rgba(180,140,40,0.04); --border: rgba(184,134,11,0.18);
+    }
+    body.dark-mode {
+      --black: #0f0e0b; --deep: #141208; --gold: #c9a84c;
+      --mustard: #c9a84c; --mustard-dark: #a8893c; --mustard-light: #e8c96a;
+      --navy: #c9a84c; --navy-light: #e8c96a; --navy-dark: #a8893c;
+      --cream: #f0ead8; --dim: #7a6e5e;
+      --red: #e74c3c; --green: #2ecc71;
+      --card-bg: rgba(255,255,255,0.02); --border: rgba(201,168,76,0.14);
+    }
+    body.dark-mode nav { background: rgba(15,14,11,0.95) !important; }
+    body.dark-mode #preloader { background: #0f0e0b !important; }
+    body.dark-mode .pre-title { color: #f0ead8 !important; }
+    body.dark-mode .sun-circle { stroke: #f0ead8 !important; }
+    body.dark-mode .sun-ray   { stroke: #f0ead8 !important; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--cream); font-family: 'DM Sans', sans-serif; overflow-x: hidden; cursor: none; transition: background 0.4s, color 0.4s; }
+    .cursor { position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference; }
+    .cursor-ring { position:fixed;width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:0.5; }
+    body::before { content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.3; }
+
+
+    /* ============================================================
+       PRELOADER — BULL & BEAR BACKGROUND
+       ============================================================ */
+    #preloader {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #faf6ee;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      transition: opacity 0.9s ease, visibility 0.9s ease;
+    }
+    #preloader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    /* Center content block — perfectly centred, no drift */
+    .pre-content {
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      width: 100%;
+      padding: 0 24px;
+    }
+
+    /* Title */
+    .pre-title {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #1a1410;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: preElIn 0.8s cubic-bezier(0.16,1,0.3,1) forwards 0.8s;
+    }
+    .pre-title span { color: var(--mustard); }
+
+    /* Divider */
+    .pre-divider-line {
+      width: 0; height: 1px;
+      background: rgba(26,58,92,0.3);
+      margin: 22px auto 18px;
+      animation: preDivGrow 0.7s ease forwards 1.3s;
+    }
+    @keyframes preDivGrow { to { width: 240px; } }
+
+    /* Powered by */
+    .pre-powered {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(9px, 1.4vw, 11px);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #8a7a5a;
+      opacity: 0;
+      animation: preElIn 0.6s ease forwards 1.6s;
+    }
+    .pre-powered span { color: var(--mustard); font-weight: 700; }
+
+    /* Loading bar */
+    .pre-bar-wrap {
+      width: 200px; height: 1px;
+      background: rgba(26,20,16,0.1);
+      margin-top: 36px;
+      opacity: 0;
+      animation: preElIn 0.5s ease forwards 1.9s;
+    }
+    .pre-bar {
+      height: 100%; width: 0%;
+      background: var(--mustard);
+      transition: width 0.4s ease;
+    }
+    .pre-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8a7a5a;
+      margin-top: 10px;
+      opacity: 0;
+      animation: preElIn 0.5s ease forwards 2.0s;
+      text-align: center;
+    }
+
+    @keyframes preElIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      #preloader { background: #0f0e0b !important; }
+      .pre-title  { color: #f0ead8 !important; }
+      .pre-powered { color: #7a6e5e !important; }
+      .pre-status  { color: #7a6e5e !important; }
+    }
+    body.dark-mode #preloader { background: #0f0e0b !important; }
+    body.dark-mode .pre-title { color: #f0ead8 !important; }
+
+    /* ============================================================
+       READING PROGRESS BAR  */
+
+    #progress-bar { position:fixed;top:0;left:0;height:2px;background:#1a3a5c;z-index:9999;width:0%;transition:width 0.1s; }
+
+    /* NAV */
+    nav { position:fixed;top:2px;left:0;right:0;z-index:100;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(26,58,92,0.97);backdrop-filter:blur(12px);transition:background 0.4s; }
+    body.light-mode nav { background:rgba(26,58,92,0.97); }
+    .nav-logo { font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;color:#fff;text-transform:uppercase; }
+    .nav-logo span { color:rgba(255,255,255,0.6); }
+    .nav-links { display:flex;gap:28px;list-style:none;align-items:center; }
+    .nav-links a { font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.12em;color:rgba(255,255,255,0.75);text-decoration:none;text-transform:uppercase;transition:color 0.3s;cursor:pointer; }
+    .nav-links a:hover { color:#fff; }
+    .nav-links a.active-link { color:#fff; font-weight:700; }
+
+    /* THEME TOGGLE */
+    .theme-toggle { background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;padding:7px 14px;cursor:pointer;transition:all 0.3s; }
+    .theme-toggle:hover { background:rgba(255,255,255,0.25);border-color:#fff;color:#fff; }
+
+    /* TICKER */
+    .tv-ticker-wrap { margin-top:61px;border-bottom:1px solid var(--border); }
+    .tv-ticker-wrap.band2 { margin-top:0;border-top:1px solid rgba(201,168,76,0.08);border-bottom:none; }
+
+    /* HERO */
+    .hero { min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:80px 48px 120px;position:relative;overflow:hidden; }
+    .hero-grid { position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);background-size:60px 60px;animation:gridDrift 20s linear infinite; }
+    @keyframes gridDrift{0%{transform:translateY(0);}100%{transform:translateY(60px);}}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+    .orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 70%);top:-100px;right:0;animation:pulse 8s ease-in-out infinite;}
+    .orb-2{width:300px;height:300px;background:radial-gradient(circle,rgba(192,57,43,0.06) 0%,transparent 70%);bottom:100px;left:200px;animation:pulse 12s ease-in-out infinite reverse;}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.2);opacity:0.7;}}
+    .hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;margin-bottom:32px;display:flex;align-items:center;gap:16px;opacity:0;animation:fadeUp 0.8s ease forwards 0.3s;}
+    .hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--gold);}
+    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(64px,10vw,130px);font-weight:900;line-height:0.92;letter-spacing:-0.02em;position:relative;z-index:2;max-width:900px;}
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .line-inner{display:block;opacity:0;transform:translateY(100%);animation:slideUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;}
+    .hero-title .line:nth-child(1) .line-inner{animation-delay:0.5s;}
+    .hero-title .line:nth-child(2) .line-inner{animation-delay:0.7s;}
+    .hero-title .line:nth-child(3) .line-inner{animation-delay:0.9s;}
+    .hero-title .gold{color:var(--mustard);font-style:italic;}
+    @keyframes slideUp{to{opacity:1;transform:translateY(0);}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+    .hero-sub{font-size:17px;color:var(--dim);font-weight:300;max-width:500px;line-height:1.7;margin-top:36px;opacity:0;animation:fadeUp 0.8s ease forwards 1.2s;}
+    .hero-cta{margin-top:52px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s ease forwards 1.4s;}
+    .btn-primary{background:#1a3a5c;color:#fff;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;padding:16px 36px;border:none;cursor:pointer;font-weight:700;position:relative;overflow:hidden;transition:transform 0.3s;}
+    .btn-primary::after{content:'';position:absolute;inset:0;background:var(--black);transform:translateX(-101%);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
+    .btn-primary:hover{transform:translateY(-2px);}
+    .btn-primary:hover::after{transform:translateX(0);}
+    .btn-primary span{position:relative;z-index:1;}
+    .btn-primary:hover span{color:var(--gold);}
+    .btn-ghost{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;border-bottom:1px solid var(--dim);padding-bottom:2px;transition:color 0.3s,border-color 0.3s;cursor:pointer;}
+    .btn-ghost:hover{color:var(--cream);border-color:var(--cream);}
+    .proof-bar{display:flex;align-items:center;gap:40px;flex-wrap:wrap;margin-top:40px;padding-top:40px;border-top:1px solid rgba(201,168,76,0.1);opacity:0;animation:fadeUp 0.8s ease forwards 1.6s;}
+    .proof-item{display:flex;align-items:center;gap:10px;}
+    .proof-num{font-family:'Space Mono',monospace;font-size:15px;color:var(--gold);font-weight:700;}
+    .proof-label{font-size:13px;color:var(--dim);}
+    .proof-divider{width:1px;height:28px;background:rgba(201,168,76,0.15);}
+
+    /* CLOCK */
+    .clock-section{padding:0 48px;border-bottom:1px solid rgba(201,168,76,0.08);display:flex;align-items:stretch;}
+    .clock-block{padding:60px 80px 60px 0;border-right:1px solid rgba(201,168,76,0.08);flex:0 0 auto;}
+    .clock-display{font-family:'Space Mono',monospace;font-size:clamp(52px,7vw,96px);font-weight:700;color:var(--gold);letter-spacing:-0.03em;line-height:1;}
+    .clock-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-top:10px;}
+    .clock-desc{flex:1;padding:60px 0 60px 80px;display:flex;align-items:center;}
+    .clock-desc p{font-family:'Playfair Display',serif;font-size:clamp(20px,2.5vw,28px);font-style:italic;color:var(--cream);opacity:0.7;line-height:1.5;max-width:560px;}
+
+    /* SECTION LABEL */
+    .section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mustard);margin-bottom:48px;display:flex;align-items:center;gap:16px;}
+    .section-label::after{content:'';display:block;width:60px;height:1px;background:var(--mustard);}
+
+    /* MARKETS */
+    .markets-section{padding:80px 48px;border-bottom:1px solid rgba(201,168,76,0.08);}
+    .exchanges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px;}
+    .ex-card{background:var(--card-bg);border:1px solid var(--border);padding:28px;transition:background 0.3s,border-color 0.3s;position:relative;overflow:hidden;}
+    .ex-card:hover{background:rgba(201,168,76,0.04);border-color:rgba(201,168,76,0.2);}
+    .ex-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
+    .ex-card.up::after{background:var(--green);}
+    .ex-card.dn::after{background:var(--red);}
+    .ex-card:hover::after{transform:scaleX(1);}
+    .ex-region{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+    .ex-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--cream);margin-bottom:4px;}
+    .ex-index{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:14px;}
+    .ex-val{font-family:'Space Mono',monospace;font-size:19px;font-weight:700;color:var(--cream);}
+    .ex-chg{font-family:'Space Mono',monospace;font-size:12px;margin-top:4px;}
+    .ex-chg.up{color:var(--green);}
+    .ex-chg.dn{color:var(--red);}
+    .live-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--green);text-transform:uppercase;margin-bottom:20px;}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:livepulse 1.5s ease-in-out infinite;}
+    @keyframes livepulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.8);}}
+
+    /* FEAR & GREED */
+    .sentiment-section { padding: 0 48px 60px; border-bottom: 1px solid rgba(201,168,76,0.08); }
+    .sentiment-inner { display: grid; grid-template-columns: 300px 1fr; gap: 60px; align-items: center; }
+    .gauge-wrap { position: relative; text-align: center; }
+    .gauge-svg { width: 220px; height: 120px; overflow: visible; }
+    .gauge-needle { transform-origin: 110px 110px; transition: transform 1.5s cubic-bezier(0.16,1,0.3,1); }
+    .gauge-label { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--gold); margin-top: 8px; }
+    .gauge-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; margin-top: 4px; }
+    .gauge-score { font-family: 'Space Mono', monospace; font-size: 40px; font-weight: 700; color: var(--gold); }
+    .sentiment-desc h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--cream); margin-bottom: 12px; }
+    .sentiment-desc p { font-size: 14px; color: var(--dim); line-height: 1.75; margin-bottom: 16px; }
+    .sentiment-factors { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .sf-item { background: var(--card-bg); border: 1px solid var(--border); padding: 14px 16px; }
+    .sf-name { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
+    .sf-bar-wrap { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+    .sf-bar { height: 100%; border-radius: 2px; background: var(--gold); transition: width 1s ease; }
+    .sf-val { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--cream); margin-top: 6px; }
+
+    /* ECONOMIC CALENDAR */
+    .calendar-section { padding: 80px 48px; border-bottom: 1px solid rgba(201,168,76,0.08); }
+    .cal-week-tabs { display: flex; gap: 2px; margin-bottom: 20px; flex-wrap: wrap; }
+    .cal-week-tab { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--border); color: var(--dim); cursor: pointer; background: none; transition: all 0.2s; }
+    .cal-week-tab:hover { color: var(--cream); border-color: rgba(201,168,76,0.3); }
+    .cal-week-tab.active { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.06); }
+    .cal-region-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .cal-rf { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 14px; border: 1px solid rgba(201,168,76,0.15); color: var(--dim); cursor: pointer; background: none; transition: all 0.2s; }
+    .cal-rf:hover, .cal-rf.active { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.06); }
+    .cal-legend { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
+    .cal-leg-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); }
+    .calendar-grid { display: flex; flex-direction: column; gap: 2px; }
+    .cal-day-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); padding: 16px 0 8px; border-bottom: 1px solid rgba(201,168,76,0.1); margin-bottom: 2px; display: flex; align-items: center; gap: 12px; }
+    .cal-day-label::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.08); }
+    .cal-event { background: var(--card-bg); border: 1px solid var(--border); padding: 18px 24px; display: grid; grid-template-columns: 110px 40px 1fr 90px 130px; align-items: center; gap: 20px; transition: background 0.3s, border-color 0.3s; cursor: pointer; }
+    .cal-event:hover { background: rgba(201,168,76,0.04); border-color: rgba(201,168,76,0.2); }
+    .cal-event.india-linked { border-left: 2px solid rgba(201,168,76,0.4); }
+    .cal-time { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold); line-height: 1.5; }
+    .cal-time .cal-day { font-size: 9px; color: var(--dim); display: block; }
+    .cal-flag { font-size: 18px; line-height: 1; }
+    .cal-name { font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--cream); line-height: 1.35; }
+    .cal-name .cal-region-label { display: inline-block; font-size: 10px; color: var(--dim); font-family: 'Space Mono', monospace; letter-spacing: 0.08em; margin-top: 3px; }
+    .cal-name .cal-india-tag { display: inline-block; font-size: 9px; color: var(--gold); font-family: 'Space Mono', monospace; letter-spacing: 0.08em; margin-left: 8px; background: rgba(201,168,76,0.08); padding: 1px 6px; border: 1px solid rgba(201,168,76,0.2); }
+    .cal-impact { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 9px; border: 1px solid; white-space: nowrap; }
+    .cal-impact.high { color: var(--red); border-color: rgba(231,76,60,0.3); background: rgba(231,76,60,0.06); }
+    .cal-impact.medium { color: var(--gold); border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.06); }
+    .cal-impact.low { color: var(--dim); border-color: rgba(107,100,89,0.25); }
+    .cal-forecast { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--dim); text-align: right; line-height: 1.7; }
+    .cal-forecast strong { display: block; color: var(--cream); font-size: 13px; }
+    .cal-forecast .prev { font-size: 10px; }
+    .cal-india-note { margin-top: 28px; background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.15); padding: 20px 24px; }
+
+    /* NEWS FEED */
+    .news-section { padding: 80px 48px; border-bottom: 1px solid rgba(201,168,76,0.08); }
+    .news-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2px; }
+    .news-main { display: flex; flex-direction: column; gap: 2px; }
+    .news-item { background: var(--card-bg); border: 1px solid var(--border); padding: 28px 32px; cursor: pointer; transition: background 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
+    .news-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--gold); transform:scaleY(0); transition:transform 0.3s; }
+    .news-item:hover { background: rgba(201,168,76,0.04); border-color: rgba(201,168,76,0.2); }
+    .news-item:hover::before { transform: scaleY(1); }
+    .news-item.featured { background: rgba(201,168,76,0.04); border-color: rgba(201,168,76,0.18); }
+    .news-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); background: rgba(201,168,76,0.1); padding: 4px 10px; display: inline-block; margin-bottom: 12px; }
+    .news-headline { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--cream); line-height: 1.3; margin-bottom: 10px; }
+    .news-item.featured .news-headline { font-size: 24px; }
+    .news-summary { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .news-meta { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--dim); letter-spacing: 0.1em; margin-top: 12px; display: flex; gap: 16px; align-items: center; }
+    .news-impact { display: inline-flex; align-items: center; gap: 4px; }
+    .news-impact-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .impact-high .news-impact-dot { background: var(--red); }
+    .impact-medium .news-impact-dot { background: var(--gold); }
+    .news-sidebar { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px 24px; cursor: pointer; transition: background 0.3s; }
+    .sidebar-card:hover { background: rgba(201,168,76,0.04); }
+    .sidebar-card-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+    .sidebar-card-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--cream); line-height: 1.35; }
+    .sidebar-card-time { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--dim); margin-top: 8px; }
+
+    /* ARCHIVE */
+    .archive-section { padding: 80px 48px; border-bottom: 1px solid rgba(201,168,76,0.08); }
+    .archive-controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 40px; }
+    .archive-search { flex: 1; min-width: 240px; background: var(--card-bg); border: 1px solid rgba(201,168,76,0.15); color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 12px 20px; outline: none; transition: border-color 0.3s; }
+    .archive-search:focus { border-color: var(--gold); }
+    .archive-filter { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); border: 1px solid rgba(201,168,76,0.15); padding: 12px 16px; cursor: pointer; background: none; transition: all 0.2s; }
+    .archive-filter:hover, .archive-filter.active { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.06); }
+    .archive-stats { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 0.1em; margin-bottom: 24px; }
+    .archive-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; }
+    .archive-card { background: var(--card-bg); border: 1px solid var(--border); padding: 32px 28px; cursor: pointer; transition: background 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
+    .archive-card:hover { background: rgba(201,168,76,0.04); border-color: rgba(201,168,76,0.2); }
+    .archive-card.ai-generated { border-top: 2px solid var(--gold); }
+    .ac-badge { position: absolute; top: 16px; right: 16px; font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); background: rgba(201,168,76,0.1); padding: 3px 8px; border: 1px solid rgba(201,168,76,0.2); }
+    .ac-vol { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+    .ac-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); background: rgba(201,168,76,0.08); padding: 3px 8px; display: inline-block; margin-bottom: 12px; }
+    .ac-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--cream); line-height: 1.3; margin-bottom: 10px; }
+    .ac-excerpt { font-size: 13px; color: var(--dim); line-height: 1.7; margin-bottom: 16px; }
+    .ac-footer { display: flex; justify-content: space-between; align-items: center; }
+    .ac-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--dim); letter-spacing: 0.1em; }
+    .ac-read { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: var(--gold); text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+    .ac-rating { display: flex; gap: 3px; }
+    .star { color: var(--gold); font-size: 12px; cursor: pointer; opacity: 0.4; transition: opacity 0.2s; }
+    .star.filled, .star:hover { opacity: 1; }
+    .archive-load-more { display: block; width: 100%; margin-top: 2px; background: none; border: 1px solid rgba(201,168,76,0.15); color: var(--dim); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; padding: 18px; cursor: pointer; transition: all 0.3s; }
+    .archive-load-more:hover { color: var(--gold); border-color: var(--gold); }
+
+    /* WHY */
+    .why-section{padding:120px 48px;}
+    .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+    .why-card{background:var(--card-bg);border:1px solid var(--border);padding:52px 48px;position:relative;overflow:hidden;transition:background 0.4s,border-color 0.4s,transform 0.3s;}
+    .why-card:hover{background:rgba(26,58,92,0.04);border-color:rgba(26,58,92,0.25);transform:translateY(-3px);}
+    .why-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:0;background:var(--mustard);transition:height 0.4s cubic-bezier(0.16,1,0.3,1);}
+    .why-card:hover::before{height:100%;}
+    .why-num{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--mustard);letter-spacing:0.2em;line-height:1;margin-bottom:20px;opacity:0.6;}
+    .why-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;color:var(--cream);margin-bottom:18px;line-height:1.15;letter-spacing:-0.01em;}
+    .why-text{font-size:15px;color:var(--dim);line-height:1.75;font-weight:500;}
+
+    /* MANIFESTO */
+    .manifesto-section{padding:100px 48px;border-top:1px solid rgba(201,168,76,0.08);border-bottom:1px solid rgba(201,168,76,0.08);background:rgba(201,168,76,0.015);overflow:hidden;position:relative;}
+    .manifesto-bg-text{position:absolute;font-family:'Playfair Display',serif;font-size:clamp(120px,18vw,240px);font-weight:900;color:rgba(201,168,76,0.03);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;font-style:italic;letter-spacing:-0.04em;}
+    .manifesto-inner{max-width:820px;margin:0 auto;text-align:center;position:relative;z-index:2;}
+    .manifesto-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:36px;}
+    .manifesto-text{font-family:'Playfair Display',serif;font-size:clamp(22px,3.2vw,38px);font-weight:400;font-style:italic;color:var(--cream);line-height:1.55;letter-spacing:-0.01em;}
+    .manifesto-text strong{font-style:normal;font-weight:900;color:var(--gold);}
+    .manifesto-sig{margin-top:48px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;}
+
+    /* FOUNDER */
+    .founder-section{padding:120px 48px;border-top:1px solid rgba(201,168,76,0.08);}
+    .founder-inner{display:grid;grid-template-columns:320px 1fr;gap:80px;align-items:center;}
+    .founder-photo{width:100%;aspect-ratio:3/4;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+    .founder-photo img{width:100%;height:100%;object-fit:cover;display:none;}
+    .founder-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--dim);text-align:center;padding:32px;width:100%;height:100%;}
+    .founder-placeholder-icon{font-size:52px;opacity:0.25;}
+    .founder-placeholder p{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;opacity:0.4;line-height:1.7;}
+    .founder-tag{position:absolute;bottom:0;left:0;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;background:var(--gold);color:var(--black);padding:8px 14px;font-weight:700;}
+    .founder-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:16px;}
+    .founder-label::after{content:'';display:block;width:40px;height:1px;background:var(--gold);}
+    .founder-name{font-family:'Playfair Display',serif;font-size:clamp(36px,4vw,56px);font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:8px;}
+    .founder-role{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:32px;opacity:0.8;}
+    .founder-bio{font-size:16px;color:var(--dim);line-height:1.85;max-width:540px;}
+    .founder-bio p+p{margin-top:16px;}
+    .founder-bio strong{color:var(--cream);font-weight:500;}
+    .founder-stats{display:flex;gap:48px;margin-top:40px;padding-top:40px;border-top:1px solid rgba(201,168,76,0.1);}
+    .founder-stat-val{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:var(--gold);}
+    .founder-stat-label{font-size:12px;color:var(--dim);margin-top:4px;}
+
+    /* SIGNUP */
+    .signup-section{padding:120px 48px;border-top:1px solid rgba(201,168,76,0.08);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+    .signup-big{font-family:'Playfair Display',serif;font-size:clamp(42px,5.5vw,72px);font-weight:900;line-height:1.05;letter-spacing:-0.02em;}
+    .signup-big em{font-style:italic;color:var(--gold);}
+    .signup-meta{margin-top:32px;display:flex;gap:40px;}
+    .meta-item{display:flex;flex-direction:column;gap:4px;}
+    .meta-num{font-family:'Space Mono',monospace;font-size:24px;color:var(--gold);font-weight:700;}
+    .meta-label{font-size:12px;color:var(--dim);letter-spacing:0.05em;}
+    .signup-form-wrap{background:var(--card-bg);border:1px solid rgba(201,168,76,0.12);padding:52px 48px;}
+    .form-group{margin-bottom:20px;}
+    .form-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:10px;}
+    .form-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:15px;padding:16px 20px;outline:none;transition:border-color 0.3s,background 0.3s;cursor:text;}
+    .form-input::placeholder{color:var(--dim);opacity:0.5;}
+    .form-input:focus{border-color:var(--gold);background:rgba(201,168,76,0.04);}
+    .form-input.error{border-color:var(--red);}
+    .form-submit{width:100%;background:var(--gold);color:var(--black);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;padding:18px;border:none;font-weight:700;margin-top:8px;cursor:pointer;transition:transform 0.2s;}
+    .form-submit:hover{transform:translateY(-2px);}
+    .form-note{font-size:12px;color:var(--dim);text-align:center;margin-top:16px;opacity:0.6;}
+    .error-msg{display:none;color:var(--red);font-size:12px;margin-top:8px;}
+    .success-msg{display:none;text-align:center;padding:40px 0;}
+    .success-msg .check{font-size:40px;margin-bottom:16px;}
+    .success-msg h3{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold);margin-bottom:8px;}
+    .success-msg p{color:var(--dim);font-size:14px;}
+    .interest-group{margin-bottom:20px;}
+    .interest-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:12px;}
+    .interest-tags{display:flex;flex-wrap:wrap;gap:8px;}
+    .interest-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);border:1px solid rgba(201,168,76,0.2);padding:8px 14px;cursor:pointer;transition:all 0.2s;user-select:none;background:transparent;}
+    .interest-tag:hover{border-color:var(--gold);color:var(--cream);}
+    .interest-tag.selected{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08);}
+
+
+    /* ADMIN PANEL */
+    #adminLoginOverlay { position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px); }
+    #adminLoginOverlay.open { display:flex; }
+    .admin-login-box { background:#0f0e0b;border:1px solid rgba(201,168,76,0.25);padding:52px 48px;width:min(440px,90vw);position:relative; }
+    .admin-login-box .al-close { position:absolute;top:16px;right:20px;background:none;border:none;color:var(--dim);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;transition:color 0.2s; }
+    .admin-login-box .al-close:hover { color:var(--gold); }
+    .al-logo { font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:8px; }
+    .al-title { font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--cream);margin-bottom:6px; }
+    .al-sub { font-size:13px;color:var(--dim);margin-bottom:32px;line-height:1.6; }
+    .al-field { display:flex;flex-direction:column;gap:8px;margin-bottom:16px; }
+    .al-label { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase; }
+    .al-input { background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:15px;padding:14px 18px;outline:none;transition:border-color 0.3s;width:100%; }
+    .al-input:focus { border-color:var(--gold); }
+    .al-input.error { border-color:var(--red); }
+    .al-btn { width:100%;background:var(--gold);color:var(--black);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;padding:16px;border:none;font-weight:700;cursor:pointer;margin-top:8px;transition:transform 0.2s;display:flex;align-items:center;justify-content:center;gap:10px; }
+    .al-btn:hover { transform:translateY(-2px); }
+    .al-error { color:var(--red);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;margin-top:10px;display:none; }
+    .al-attempts { color:var(--dim);font-size:12px;text-align:center;margin-top:14px;opacity:0.6; }
+
+    /* ADMIN PANEL — FULL SCREEN */
+    #adminPanel { position:fixed;inset:0;background:#0a0a0a;z-index:7000;display:none;flex-direction:column;overflow-y:auto; }
+    #adminPanel.open { display:flex; }
+    .ap-header { position:sticky;top:0;background:rgba(10,10,10,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15);padding:18px 48px;display:flex;align-items:center;justify-content:space-between;z-index:10; }
+    .ap-logo { font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase; }
+    .ap-logo span { color:var(--dim);font-size:10px;display:block;margin-top:2px;letter-spacing:0.2em; }
+    .ap-header-btns { display:flex;gap:10px;align-items:center; }
+    .ap-badge { font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.25);padding:5px 12px; }
+    .ap-logout { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;background:none;border:1px solid rgba(201,168,76,0.15);padding:8px 16px;cursor:pointer;transition:all 0.2s; }
+    .ap-logout:hover { color:var(--red);border-color:rgba(231,76,60,0.4); }
+    .ap-body { flex:1;padding:52px 48px;max-width:1200px;margin:0 auto;width:100%; }
+    .ap-section-title { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:flex;align-items:center;gap:14px; }
+    .ap-section-title::after { content:'';flex:1;height:1px;background:rgba(201,168,76,0.1); }
+    .ap-grid { display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start; }
+    .ap-controls { display:flex;flex-direction:column;gap:16px; }
+    .ap-field { display:flex;flex-direction:column;gap:8px; }
+    .ap-label { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase; }
+    .ap-select, .ap-input { background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.15);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px 16px;outline:none;transition:border-color 0.3s;width:100%; }
+    .ap-select option { background:#1a1612; }
+    .ap-select:focus, .ap-input:focus { border-color:var(--gold); }
+    .ap-topics { display:flex;flex-wrap:wrap;gap:8px; }
+    .ap-topic { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);border:1px solid rgba(201,168,76,0.2);padding:7px 12px;cursor:pointer;transition:all 0.2s;user-select:none; }
+    .ap-topic:hover { border-color:var(--gold);color:var(--cream); }
+    .ap-topic.active { border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.08); }
+    .ap-btn { background:var(--gold);color:var(--black);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;padding:16px 32px;border:none;cursor:pointer;font-weight:700;transition:transform 0.2s,opacity 0.2s;display:flex;align-items:center;gap:10px; }
+    .ap-btn:hover { transform:translateY(-2px); }
+    .ap-btn:disabled { opacity:0.5;cursor:not-allowed;transform:none; }
+    .ap-btn.secondary { background:none;border:1px solid rgba(201,168,76,0.3);color:var(--gold); }
+    .ap-btn.secondary:hover { background:rgba(201,168,76,0.08); }
+    .ap-btn.danger { background:none;border:1px solid rgba(231,76,60,0.3);color:var(--red); }
+    .ap-btn.danger:hover { background:rgba(231,76,60,0.06); }
+    .ap-output { background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.12);min-height:440px;position:relative;overflow:hidden; }
+    .ap-output-placeholder { display:flex;flex-direction:column;align-items:center;justify-content:center;height:440px;color:var(--dim);text-align:center;padding:40px; }
+    .ap-output-placeholder .icon { font-size:48px;opacity:0.15;margin-bottom:16px; }
+    .ap-output-placeholder p { font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;line-height:1.8; }
+    .ap-newsletter { padding:36px;display:none; }
+    .ap-nl-header { border-bottom:1px solid rgba(201,168,76,0.12);padding-bottom:20px;margin-bottom:24px; }
+    .ap-nl-vol { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);margin-bottom:8px; }
+    .ap-nl-title { font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--cream);line-height:1.2; }
+    .ap-nl-body { font-size:14px;color:var(--dim);line-height:1.85; }
+    .ap-nl-body h4 { font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--cream);margin:20px 0 8px; }
+    .ap-nl-body p { margin-bottom:14px; }
+    .ap-nl-body strong { color:var(--cream); }
+    .ap-nl-stat { background:rgba(201,168,76,0.05);border-left:2px solid var(--gold);padding:14px 18px;margin:16px 0; }
+    .ap-nl-stat-num { font-family:'Space Mono',monospace;font-size:20px;color:var(--gold);font-weight:700; }
+    .ap-nl-stat-desc { font-size:12px;color:var(--dim);margin-top:4px; }
+    .ap-actions { display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:1px solid rgba(201,168,76,0.1); }
+    .ap-loading { display:none;position:absolute;inset:0;background:rgba(10,10,10,0.9);align-items:center;justify-content:center;flex-direction:column;gap:16px; }
+    .ap-loading.active { display:flex; }
+    .ap-loading-text { font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase; }
+    .ap-spinner { width:32px;height:32px;border:2px solid rgba(201,168,76,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite; }
+    .ap-divider { border:none;border-top:1px solid rgba(201,168,76,0.08);margin:48px 0; }
+    .ap-archive-preview { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:16px; }
+    .ap-archive-card { background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.08);padding:20px;cursor:pointer;transition:background 0.2s; }
+    .ap-archive-card:hover { background:rgba(201,168,76,0.04); }
+    .ap-ac-tag { font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-bottom:6px; }
+    .ap-ac-title { font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:8px; }
+    .ap-ac-meta { font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);display:flex;justify-content:space-between; }
+    .ap-stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:48px; }
+    .ap-stat-card { background:rgba(255,255,255,0.02);border:1px solid rgba(201,168,76,0.08);padding:24px 28px; }
+    .ap-stat-val { font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--gold); }
+    .ap-stat-label { font-size:12px;color:var(--dim);margin-top:6px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase; }
+
+    @media(max-width:900px){
+      .ap-header { padding:16px 20px; }
+      .ap-body { padding:36px 20px; }
+      .ap-grid { grid-template-columns:1fr; }
+      .ap-stats-row { grid-template-columns:1fr 1fr; }
+      .ap-archive-preview { grid-template-columns:1fr; }
+    }
+
+    /* FOOTER */
+    footer{border-top:1px solid rgba(201,168,76,0.08);padding:40px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+    .footer-logo{font-family:'Space Mono',monospace;font-size:13px;color:var(--gold);letter-spacing:0.1em;}
+    .footer-copy{font-size:12px;color:var(--dim);opacity:0.5;font-family:'Space Mono',monospace;}
+    .footer-links{display:flex;gap:32px;}
+    .footer-links a{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.3s;cursor:pointer;}
+    .footer-links a:hover{color:var(--gold);}
+    .social-links{display:flex;gap:12px;align-items:center;}
+    .social-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--dim);text-decoration:none;text-transform:uppercase;border:1px solid rgba(201,168,76,0.15);padding:7px 12px;transition:all 0.3s;cursor:pointer;}
+    .social-link:hover{color:var(--gold);border-color:var(--gold);}
+
+    /* MOBILE NAV */
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+    .hamburger span{display:block;width:22px;height:1.5px;background:#fff;transition:all 0.3s;}
+    .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    .mobile-menu{display:none;position:fixed;top:61px;left:0;right:0;background:rgba(30,26,20,0.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,0.15);z-index:99;flex-direction:column;padding:24px 24px 32px;}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;color:rgba(255,255,255,0.8);text-decoration:none;text-transform:uppercase;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.1);transition:color 0.3s;cursor:pointer;}
+    .mobile-menu a:last-child{border-bottom:none;}
+    .mobile-menu a:hover{color:#fff;}
+
+    /* NEWS CATEGORY TABS */
+    .news-cat-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; }
+    .nct { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 9px 16px; border: 1px solid rgba(201,168,76,0.15); color: var(--dim); cursor: pointer; background: none; transition: all 0.2s; }
+    .nct:hover { color: var(--cream); border-color: rgba(201,168,76,0.3); }
+    .nct.active { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.06); }
+
+    /* NEWS LOADING STATE */
+    .news-loading { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;gap:16px; }
+    .nl-spinner { width:28px;height:28px;border:2px solid rgba(201,168,76,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite; }
+    .nl-loading-text { font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase; }
+
+    /* NEWS SCORECARD */
+    .news-scorecard { margin-top: 16px; background: rgba(201,168,76,0.03); border: 1px solid rgba(201,168,76,0.12); padding: 20px; }
+    .scorecard-item { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .scorecard-item:last-child { margin-bottom: 0; }
+    .sc-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; color: var(--dim); text-transform: uppercase; }
+    .sc-bar-wrap { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+    .sc-bar { height: 100%; border-radius: 2px; transition: width 1s ease; }
+    .sc-val { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700; text-align: right; letter-spacing: 0.05em; }
+
+    /* INDIA ANGLE TAG in news */
+    .news-india-angle { margin-top: 12px; padding: 10px 14px; background: rgba(201,168,76,0.05); border-left: 2px solid var(--gold); font-family: 'Space Mono', monospace; font-size: 10px; color: var(--dim); line-height: 1.65; }
+    .news-india-angle strong { color: var(--gold); display: block; margin-bottom: 3px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
+
+    /* NEWS MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(8px); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -48%); z-index: 501; width: min(720px, 92vw); max-height: 80vh; overflow-y: auto; background: #faf6ee; border: 1px solid rgba(201,168,76,0.2); padding: 48px; transition: transform 0.3s; }
+    .modal-overlay.open .modal { transform: translate(-50%, -50%); }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--dim); cursor: pointer; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; transition: color 0.2s; }
+    .modal-close:hover { color: var(--gold); }
+    .modal-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); background: rgba(201,168,76,0.1); padding: 4px 10px; display: inline-block; margin-bottom: 20px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 3vw, 32px); font-weight: 900; color: var(--cream); line-height: 1.2; margin-bottom: 16px; }
+    .modal-meta { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 0.1em; margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid rgba(201,168,76,0.1); }
+    .modal-body { font-size: 15px; color: var(--dim); line-height: 1.85; }
+    .modal-body p + p { margin-top: 16px; }
+    .modal-body strong { color: var(--cream); font-weight: 500; }
+    .modal-body h4 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--cream); margin: 24px 0 10px; }
+
+    @media(max-width:900px){
+      nav{padding:20px 24px;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .hero{padding:80px 24px 100px;}
+      .clock-section{flex-direction:column;padding:0 24px;}
+      .clock-block{padding:40px 0;border-right:none;border-bottom:1px solid rgba(201,168,76,0.08);}
+      .clock-desc{padding:40px 0;}
+      .markets-section,.why-section,.archive-section,.signup-section,.founder-section,
+      .news-section,.calendar-section,.sentiment-section{padding:60px 24px;}
+      .exchanges-grid{grid-template-columns:1fr 1fr;}
+      .why-grid{grid-template-columns:1fr;}
+      .signup-section{grid-template-columns:1fr;gap:48px;}
+      .founder-inner{grid-template-columns:1fr;gap:40px;}
+      .news-layout{grid-template-columns:1fr;}
+      .archive-grid{grid-template-columns:1fr;}
+      .sentiment-inner{grid-template-columns:1fr;}
+      .cal-event{grid-template-columns:80px 28px 1fr;gap:10px;}
+      .cal-forecast, .cal-impact { display: none; }
+      footer{flex-direction:column;gap:16px;text-align:center;padding:32px 24px;}
+      .social-links{justify-content:center;}
+      .modal{padding:32px 24px;}
+    }
+
+    
+    /* ============================================================
+       SUBSCRIBER COUNTER BANNER
+       ============================================================ */
+    .subscriber-banner {
+      background: #1a3a5c;
+      color: #fff;
+      padding: 14px 48px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 32px; flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sub-banner-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7);
+    }
+    .sub-counter-wrap {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sub-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 22px; font-weight: 700;
+      color: #c9a84c; letter-spacing: 0.04em;
+    }
+    .sub-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5);
+    }
+    .sub-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); }
+    .sub-pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #2ecc71;
+      animation: livepulse 1.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       SOCIAL PROOF BAR
+       ============================================================ */
+    .social-proof-bar {
+      background: #eef2f7;
+      border-bottom: 1px solid rgba(26,58,92,0.1);
+      padding: 16px 48px;
+      display: flex; align-items: center;
+      justify-content: center; gap: 40px;
+      flex-wrap: wrap;
+    }
+    .sp-item {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .sp-icon { font-size: 14px; }
+    .sp-item strong { color: var(--mustard); }
+    .sp-sep { width: 1px; height: 18px; background: rgba(26,58,92,0.15); }
+
+    /* ============================================================
+       TESTIMONIALS SECTION
+       ============================================================ */
+    .testimonials-section {
+      padding: 100px 48px;
+      border-bottom: 1px solid rgba(26,58,92,0.08);
+      background: #eef2f7;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 0;
+    }
+    .testi-card {
+      background: #fff;
+      border: 1px solid rgba(26,58,92,0.1);
+      padding: 36px 32px;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .testi-card:hover {
+      border-color: rgba(26,58,92,0.3);
+      transform: translateY(-3px);
+    }
+    .testi-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px; color: var(--mustard);
+      opacity: 0.2; line-height: 1;
+      margin-bottom: 16px;
+    }
+    .testi-text {
+      font-size: 14px; color: var(--dim);
+      line-height: 1.8; margin-bottom: 24px;
+      font-style: italic;
+    }
+    .testi-author {
+      display: flex; align-items: center; gap: 14px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(26,58,92,0.08);
+    }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #1a3a5c;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 13px; font-weight: 700; color: #c9a84c;
+      flex-shrink: 0;
+    }
+    .testi-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      color: var(--mustard); letter-spacing: 0.08em;
+    }
+    .testi-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--dim);
+      margin-top: 3px;
+    }
+    .testi-stars {
+      margin-left: auto;
+      color: #c9a84c; font-size: 12px; letter-spacing: 2px;
+    }
+
+    /* ============================================================
+       BACK TO TOP BUTTON
+       ============================================================ */
+    #backToTop {
+      position: fixed; bottom: 32px; right: 32px;
+      width: 44px; height: 44px;
+      background: #1a3a5c;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 500;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.3s, transform 0.3s, background 0.2s;
+      box-shadow: 0 4px 16px rgba(26,58,92,0.25);
+    }
+    #backToTop.visible { opacity: 1; transform: translateY(0); }
+    #backToTop:hover { background: #0f2740; }
+    #backToTop svg { stroke: #fff; }
+
+    /* ============================================================
+       SMOOTH PAGE TRANSITION OVERLAY
+       ============================================================ */
+    #pageTransition {
+      position: fixed; inset: 0;
+      background: #1a3a5c;
+      z-index: 99998;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      pointer-events: none;
+    }
+    #pageTransition.enter {
+      animation: ptEnter 0.45s cubic-bezier(0.76,0,0.24,1) forwards;
+    }
+    #pageTransition.exit {
+      animation: ptExit 0.45s cubic-bezier(0.76,0,0.24,1) forwards;
+    }
+    @keyframes ptEnter { 0%{transform:scaleY(0);transform-origin:bottom;} 100%{transform:scaleY(1);transform-origin:bottom;} }
+    @keyframes ptExit  { 0%{transform:scaleY(1);transform-origin:top;} 100%{transform:scaleY(0);transform-origin:top;} }
+
+    @media(max-width:900px) {
+      .subscriber-banner { padding: 14px 24px; gap: 16px; }
+      .social-proof-bar { padding: 14px 24px; gap: 20px; }
+      .testimonials-section { padding: 60px 24px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      #backToTop { bottom: 20px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+
+<!-- ============================================================
+     PRELOADER — BULL & BEAR BACKGROUND
+     ============================================================ -->
+<div id="preloader">
+<!-- Centered content over the images -->
+  <div class="pre-content">
+    <div class="pre-title"><span>the4am</span>.finance</div>
+    <div class="pre-divider-line"></div>
+    <div class="pre-powered">powered by <span>the4am.labs</span></div>
+    <div class="pre-bar-wrap">
+      <div class="pre-bar" id="preBar"></div>
+    </div>
+    <div class="pre-status" id="preStatus">Initialising markets...</div>
+  </div>
+
+</div>
+
+<div id="progress-bar"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">the4am<span>.</span>finance</div>
+  <ul class="nav-links">
+    <li><a href="#markets">Markets</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#archive">Archive</a></li>
+    <li><a href="#why">Why 4AM</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="#testimonials">Reviews</a></li><li><a href="#subscribe">Subscribe</a></li>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀ Light</button>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#markets" onclick="closeMenu()">Markets</a>
+  <a href="#news" onclick="closeMenu()">News Feed</a>
+  <a href="#archive" onclick="closeMenu()">Archive</a>
+  <a href="#why" onclick="closeMenu()">Why 4AM</a>
+  <a href="#founder" onclick="closeMenu()">Founder</a>
+  <a href="#testimonials" onclick="closeMenu()">Reviews</a>
+  <a href="#subscribe" onclick="closeMenu()">Subscribe →</a>
+</div>
+
+<!-- SUBSCRIBER COUNTER BANNER -->
+<div class="subscriber-banner">
+  <div class="sub-pulse"></div>
+  <div class="sub-banner-text">Readers this week</div>
+  <div class="sub-counter-wrap">
+    <div class="sub-count" id="subCount">0</div>
+    <div class="sub-label">Subscribers</div>
+  </div>
+  <div class="sub-divider"></div>
+  <div class="sub-banner-text">🌍 &nbsp;Readers across <strong style="color:#c9a84c;">42 countries</strong></div>
+  <div class="sub-divider"></div>
+  <div class="sub-banner-text">📬 &nbsp;Every Sunday at <strong style="color:#c9a84c;">4AM</strong></div>
+</div>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="social-proof-bar">
+  <div class="sp-item"><span class="sp-icon">⚡</span><span><strong>100%</strong> Free — always</span></div>
+  <div class="sp-sep"></div>
+  <div class="sp-item"><span class="sp-icon">📊</span><span><strong>Tier-1</strong> macro coverage</span></div>
+  <div class="sp-sep"></div>
+  <div class="sp-item"><span class="sp-icon">🤖</span><span><strong>AI-powered</strong> newsletter engine</span></div>
+  <div class="sp-sep"></div>
+  <div class="sp-item"><span class="sp-icon">🇮🇳</span><span><strong>India-first</strong> global lens</span></div>
+  <div class="sp-sep"></div>
+  <div class="sp-item"><span class="sp-icon">🔒</span><span><strong>No spam.</strong> Unsubscribe anytime</span></div>
+</div>
+
+<!-- TICKER 1 -->
+<div class="tv-ticker-wrap">
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {"symbols":[{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},{"proName":"FOREXCOM:NSXUSD","title":"Nasdaq 100"},{"description":"Nifty 50","proName":"NSE:NIFTY"},{"description":"Sensex","proName":"BSE:SENSEX"},{"description":"FTSE 100","proName":"SPREADEX:FTSE"},{"description":"Nikkei","proName":"INDEX:NKY"},{"description":"EUR/USD","proName":"FX:EURUSD"},{"description":"USD/INR","proName":"FX:USDINR"},{"description":"Gold","proName":"TVC:GOLD"},{"description":"Crude Oil","proName":"NYMEX:CL1!"}],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"light","locale":"en"}
+    </script>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="hero-eyebrow">Finance Intelligence — Before The Bell</div>
+  <h1 class="hero-title">
+    <span class="line"><span class="line-inner">Markets don't</span></span>
+    <span class="line"><span class="line-inner">wait. <em class="gold">Neither</em></span></span>
+    <span class="line"><span class="line-inner">should you.</span></span>
+  </h1>
+  <p class="hero-sub">A sharp, independent finance newsletter — live economic news, a global market calendar, and a fully searchable archive. Delivered before the world wakes up.</p>
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('subscribe').scrollIntoView({behavior:'smooth'})"><span>Subscribe Free →</span></button>
+  </div>
+  <div class="proof-bar">
+    <div class="proof-item"><div class="proof-num">4AM</div><div class="proof-label">Every Sunday morning</div></div>
+    <div class="proof-divider"></div>
+    <div class="proof-item"><div class="proof-num">AI</div><div class="proof-label">Powered newsletter engine</div></div>
+    <div class="proof-divider"></div>
+    <div class="proof-item"><div class="proof-num">Free</div><div class="proof-label">Always. No catch.</div></div>
+    <div class="proof-divider"></div>
+    <div class="proof-item"><div class="proof-num">1,200+</div><div class="proof-label">Early readers</div></div>
+  </div>
+</section>
+
+<!-- TICKER 2 -->
+<div class="tv-ticker-wrap band2">
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {"symbols":[{"description":"Bitcoin","proName":"COINBASE:BTCUSD"},{"description":"Ethereum","proName":"COINBASE:ETHUSD"},{"description":"Gold","proName":"TVC:GOLD"},{"description":"Silver","proName":"TVC:SILVER"},{"description":"WTI Crude","proName":"NYMEX:CL1!"},{"description":"10Y Treasury","proName":"TVC:US10Y"}],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"light","locale":"en"}
+    </script>
+  </div>
+</div>
+
+<!-- CLOCK -->
+<div class="clock-section">
+  <div class="clock-block">
+    <div class="clock-display" id="clock">04:00:00</div>
+    <div class="clock-label">When your edge begins</div>
+  </div>
+  <div class="clock-desc">
+    <p>"Every issue lands in your inbox before the world wakes up — written for people who think before they trade."</p>
+  </div>
+</div>
+
+<!-- MARKETS -->
+<section class="markets-section" id="markets">
+  <div class="live-badge"><span class="live-dot"></span>Live Market Data</div>
+  <div class="section-label">Global Markets At A Glance</div>
+  <div style="margin-bottom:4px;">
+    <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Indices</div>
+    <div class="exchanges-grid">
+      <div class="ex-card"><div class="ex-region">India</div><div class="ex-name">Nifty 50</div><div class="ex-index">NSE</div><div class="ex-val" id="nifty-val">—</div><div class="ex-chg" id="nifty-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">India</div><div class="ex-name">Sensex</div><div class="ex-index">BSE</div><div class="ex-val" id="sensex-val">—</div><div class="ex-chg" id="sensex-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">USA</div><div class="ex-name">S&amp;P 500</div><div class="ex-index">NYSE</div><div class="ex-val" id="spx-val">—</div><div class="ex-chg" id="spx-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">USA</div><div class="ex-name">Nasdaq</div><div class="ex-index">NASDAQ</div><div class="ex-val" id="ndx-val">—</div><div class="ex-chg" id="ndx-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">UK</div><div class="ex-name">FTSE 100</div><div class="ex-index">LSE</div><div class="ex-val" id="ftse-val">—</div><div class="ex-chg" id="ftse-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">Japan</div><div class="ex-name">Nikkei 225</div><div class="ex-index">TSE</div><div class="ex-val" id="nky-val">—</div><div class="ex-chg" id="nky-chg">Loading...</div></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;margin-bottom:4px;">
+    <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Commodities & Crypto <span style="color:var(--gold);font-size:8px;">· Prices in ₹</span></div>
+    <div class="exchanges-grid">
+      <div class="ex-card"><div class="ex-region">Precious Metal</div><div class="ex-name">Gold</div><div class="ex-index">per oz · INR</div><div class="ex-val" id="gold-val">—</div><div class="ex-chg" id="gold-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">Precious Metal</div><div class="ex-name">Silver</div><div class="ex-index">per oz · INR</div><div class="ex-val" id="silver-val">—</div><div class="ex-chg" id="silver-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">Energy</div><div class="ex-name">Crude Oil</div><div class="ex-index">WTI · INR/bbl</div><div class="ex-val" id="oil-val">—</div><div class="ex-chg" id="oil-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">FX</div><div class="ex-name">USD / INR</div><div class="ex-index">Forex</div><div class="ex-val" id="usdinr-val">—</div><div class="ex-chg" id="usdinr-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">Crypto</div><div class="ex-name">Bitcoin</div><div class="ex-index">BTC · INR</div><div class="ex-val" id="btc-val">—</div><div class="ex-chg" id="btc-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">Bond</div><div class="ex-name">10Y Treasury</div><div class="ex-index">US Yield</div><div class="ex-val" id="tnx-val">—</div><div class="ex-chg" id="tnx-chg">Loading...</div></div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);opacity:0.5;letter-spacing:0.1em;">
+    Data via Yahoo Finance · <span id="last-updated">Updating...</span>
+  </div>
+  <div style="margin-top:24px;">
+    <div class="tradingview-widget-container" style="height:400px;">
+      <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+      {"colorTheme":"light","dateRange":"1D","showChart":true,"locale":"en","isTransparent":true,"showSymbolLogo":true,"width":"100%","height":"400","tabs":[{"title":"Indices","symbols":[{"s":"NSE:NIFTY","d":"Nifty 50"},{"s":"BSE:SENSEX","d":"Sensex"},{"s":"FOREXCOM:SPXUSD","d":"S&P 500"},{"s":"FOREXCOM:NSXUSD","d":"Nasdaq 100"},{"s":"SPREADEX:FTSE","d":"FTSE 100"},{"s":"INDEX:NKY","d":"Nikkei 225"}],"originalTitle":"Indices"},{"title":"Commodities","symbols":[{"s":"TVC:GOLD","d":"Gold"},{"s":"TVC:SILVER","d":"Silver"},{"s":"NYMEX:CL1!","d":"Crude Oil"},{"s":"NYMEX:NG1!","d":"Natural Gas"}],"originalTitle":"Commodities"},{"title":"Crypto","symbols":[{"s":"COINBASE:BTCUSD","d":"Bitcoin"},{"s":"COINBASE:ETHUSD","d":"Ethereum"}],"originalTitle":"Crypto"},{"title":"FX","symbols":[{"s":"FX:USDINR","d":"USD/INR"},{"s":"FX:EURUSD","d":"EUR/USD"}],"originalTitle":"FX"}]}
+      </script>
+    </div>
+  </div>
+  <script>
+  (function(){
+    const PROXY='https://api.allorigins.win/get?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/');
+    function fmt(n,d=2){if(!n||isNaN(n))return'—';return n>=1e7?'₹'+(n/1e7).toFixed(2)+'Cr':n>=1e5?'₹'+(n/1e5).toFixed(2)+'L':n.toLocaleString('en-IN',{maximumFractionDigits:d});}
+    async function fetchQ(sym){try{const r=await fetch(PROXY+encodeURIComponent(sym+'?interval=1d&range=1d'));const raw=await r.json();const j=JSON.parse(raw.contents||'{}');const q=j?.chart?.result?.[0];if(!q)return null;const m=q.meta;return{price:m.regularMarketPrice,change:m.regularMarketChange,changePct:m.regularMarketChangePercent};}catch{return null;}}
+    function setCard(vi,ci,price,chg,pct,pre='',dec=2){const v=document.getElementById(vi);const c=document.getElementById(ci);if(!v||!c)return;v.textContent=pre+(price>=1000?price.toLocaleString('en-IN',{maximumFractionDigits:dec}):price.toFixed(dec));const up=pct>=0;c.textContent=(up?'▲ +':'▼ ')+Math.abs(pct).toFixed(2)+'%';c.className='ex-chg '+(up?'up':'dn');const card=v.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}
+    async function loadMarkets(){
+      const usdInr=(await fetchQ('USDINR=X'))?.price||84;
+      const pairs=[['%5ENSEI','nifty-val','nifty-chg','',0],['%5EBSESN','sensex-val','sensex-chg','',0],['%5EGSPC','spx-val','spx-chg','',2],['%5EIXIC','ndx-val','ndx-chg','',2],['%5EFTSE','ftse-val','ftse-chg','',0],['^N225','nky-val','nky-chg','',0]];
+      for(const[s,v,c,p,d]of pairs){const q=await fetchQ(s);if(q)setCard(v,c,q.price,q.change,q.changePct,p,d);}
+      const comms=[['GC=F','gold-val','gold-chg'],['SI=F','silver-val','silver-chg'],['CL=F','oil-val','oil-chg'],['BTC-USD','btc-val','btc-chg']];
+      for(const[s,v,c]of comms){const q=await fetchQ(s);if(q){const inr=q.price*usdInr;const el=document.getElementById(v);const chg=document.getElementById(c);if(el)el.textContent=fmt(inr);if(chg){const up=q.changePct>=0;chg.textContent=(up?'▲ +':'▼ ')+Math.abs(q.changePct).toFixed(2)+'%';chg.className='ex-chg '+(up?'up':'dn');const card=el?.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}}}
+      const usd=await fetchQ('USDINR=X');if(usd)setCard('usdinr-val','usdinr-chg',usd.price,usd.change,usd.changePct,'₹',2);
+      const tnx=await fetchQ('%5ETNX');if(tnx)setCard('tnx-val','tnx-chg',tnx.price,tnx.change,tnx.changePct,'',3);
+      const upd=document.getElementById('last-updated');if(upd)upd.textContent='Last updated: '+new Date().toLocaleTimeString('en-IN');
+    }
+    loadMarkets();setInterval(loadMarkets,60000);
+  })();
+  </script>
+</section>
+
+<!-- FEAR & GREED INDICATOR -->
+<section class="sentiment-section">
+  <div class="section-label">Market Sentiment</div>
+  <div class="sentiment-inner">
+    <div class="gauge-wrap">
+      <svg class="gauge-svg" viewBox="0 0 220 130">
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#e74c3c"/>
+            <stop offset="25%" style="stop-color:#e67e22"/>
+            <stop offset="50%" style="stop-color:#f39c12"/>
+            <stop offset="75%" style="stop-color:#2ecc71"/>
+            <stop offset="100%" style="stop-color:#27ae60"/>
+          </linearGradient>
+        </defs>
+        <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14" stroke-linecap="round"/>
+        <path id="gaugeArc" d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283"/>
+        <line class="gauge-needle" id="gaugeNeedle" x1="110" y1="110" x2="110" y2="28" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="110" cy="110" r="5" fill="#c9a84c"/>
+        <text x="20" y="128" fill="rgba(107,100,89,0.7)" font-family="monospace" font-size="8">Fear</text>
+        <text x="184" y="128" fill="rgba(107,100,89,0.7)" font-family="monospace" font-size="8">Greed</text>
+      </svg>
+      <div class="gauge-score" id="sentimentScore">—</div>
+      <div class="gauge-label" id="sentimentLabel">Loading...</div>
+      <div class="gauge-sub">Market Sentiment Index</div>
+    </div>
+    <div class="sentiment-desc">
+      <h3>What the Market Is Feeling Right Now</h3>
+      <p id="sentimentText">The Fear & Greed Index synthesises seven market indicators to measure the emotional temperature of investors. Extremes often signal contrarian opportunities.</p>
+      <div class="sentiment-factors" id="sentimentFactors"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ECONOMIC CALENDAR -->
+<section class="calendar-section" id="calendar">
+  <div class="section-label">Global Economic Calendar</div>
+  <p style="font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:28px;max-width:700px;">
+    All times in <strong style="color:var(--gold)">IST (India Standard Time)</strong>. Filtered for events that move Indian markets — Nifty, INR, bonds, and FII flows.
+  </p>
+
+  <!-- Week tabs -->
+  <div class="cal-week-tabs" id="calWeekTabs"></div>
+
+  <!-- Region filter pills -->
+  <div class="cal-region-filters">
+    <button class="cal-rf active" data-region="all" onclick="filterCalRegion(this,'all')">🌍 All Regions</button>
+    <button class="cal-rf" data-region="IN" onclick="filterCalRegion(this,'IN')">🇮🇳 India</button>
+    <button class="cal-rf" data-region="US" onclick="filterCalRegion(this,'US')">🇺🇸 USA</button>
+    <button class="cal-rf" data-region="EU" onclick="filterCalRegion(this,'EU')">🇪🇺 Eurozone</button>
+    <button class="cal-rf" data-region="UK" onclick="filterCalRegion(this,'UK')">🇬🇧 UK</button>
+    <button class="cal-rf" data-region="CN" onclick="filterCalRegion(this,'CN')">🇨🇳 China</button>
+    <button class="cal-rf" data-region="JP" onclick="filterCalRegion(this,'JP')">🇯🇵 Japan</button>
+    <button class="cal-rf" data-region="HIGH" onclick="filterCalRegion(this,'HIGH')">🔴 High Impact Only</button>
+  </div>
+
+  <!-- Legend -->
+  <div class="cal-legend">
+    <span class="cal-leg-item"><span class="cal-impact high" style="font-size:8px;padding:2px 7px;">HIGH</span> Likely to move Nifty/INR significantly</span>
+    <span class="cal-leg-item"><span class="cal-impact medium" style="font-size:8px;padding:2px 7px;">MED</span> Watch for indirect impact</span>
+    <span class="cal-leg-item"><span class="cal-impact low" style="font-size:8px;padding:2px 7px;">LOW</span> Context / background noise</span>
+  </div>
+
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+  <div class="cal-india-note">
+    <span style="color:var(--gold);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;">📌 WHY THIS MATTERS FOR INDIA:</span>
+    <span id="calIndiaNote" style="font-size:13px;color:var(--dim);line-height:1.7;display:block;margin-top:8px;">Select any event above to see its specific impact on Indian markets.</span>
+  </div>
+</section>
+
+<!-- ECONOMIC NEWS FEED -->
+<section class="news-section" id="news">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;">
+    <div>
+      <div class="section-label" style="margin-bottom:12px;">Market-Moving News</div>
+      <p style="font-size:14px;color:var(--dim);line-height:1.7;max-width:560px;">Live RSS feeds filtered for tier-1 macro events only — stories from the last 7 days that move bond markets, central bank policy, or FII flows. Auto-refreshes every 30 minutes.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
+      <div class="live-badge"><span class="live-dot"></span>Live Feed</div>
+      <div id="newsRefreshBadge" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;color:var(--dim);text-transform:uppercase;">Loading...</div>
+      <button onclick="fetchLiveNews()" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);background:none;border:1px solid var(--border);padding:6px 12px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='rgba(201,168,76,0.4)'" onmouseout="this.style.color='var(--dim)';this.style.borderColor='var(--border)'">↻ Refresh</button>
+    </div>
+  </div>
+  <div class="news-cat-tabs" id="newsCatTabs">
+    <button class="nct active" data-cat="all" onclick="filterNews(this,&apos;all&apos;)">All Stories</button>
+    <button class="nct" data-cat="Central Banks" onclick="filterNews(this,&apos;Central Banks&apos;)">🏦 Central Banks</button>
+    <button class="nct" data-cat="Geopolitics" onclick="filterNews(this,&apos;Geopolitics&apos;)">🌐 Geopolitics</button>
+    <button class="nct" data-cat="Macro Data" onclick="filterNews(this,&apos;Macro Data&apos;)">📊 Macro Data</button>
+    <button class="nct" data-cat="India Markets" onclick="filterNews(this,&apos;India Markets&apos;)">🇮🇳 India</button>
+    <button class="nct" data-cat="Commodities" onclick="filterNews(this,&apos;Commodities&apos;)">⛽ Commodities</button>
+    <button class="nct" data-cat="Bonds &amp; FX" onclick="filterNews(this,&apos;Bonds &amp; FX&apos;)">💱 Bonds &amp; FX</button>
+  </div>
+  <div class="news-layout">
+    <div class="news-main" id="newsFeed"></div>
+    <div class="news-sidebar">
+      <div style="font-family:&apos;Space Mono&apos;,monospace;font-size:9px;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">On The Radar</div>
+      <div id="newsSidebar"></div>
+      <div class="news-scorecard">
+        <div style="font-family:&apos;Space Mono&apos;,monospace;font-size:9px;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">This Week&apos;s Risk Scorecard</div>
+        <div class="scorecard-item"><span class="sc-label">USD Strength</span><div class="sc-bar-wrap"><div class="sc-bar" style="width:72%;background:var(--red)"></div></div><span class="sc-val" style="color:var(--red)">High</span></div>
+        <div class="scorecard-item"><span class="sc-label">FII Flow Risk</span><div class="sc-bar-wrap"><div class="sc-bar" style="width:65%;background:var(--red)"></div></div><span class="sc-val" style="color:var(--red)">High</span></div>
+        <div class="scorecard-item"><span class="sc-label">Inflation Pressure</span><div class="sc-bar-wrap"><div class="sc-bar" style="width:58%;background:var(--gold)"></div></div><span class="sc-val" style="color:var(--gold)">Med</span></div>
+        <div class="scorecard-item"><span class="sc-label">Crude Risk</span><div class="sc-bar-wrap"><div class="sc-bar" style="width:44%;background:var(--gold)"></div></div><span class="sc-val" style="color:var(--gold)">Med</span></div>
+        <div class="scorecard-item"><span class="sc-label">RBI Policy Risk</span><div class="sc-bar-wrap"><div class="sc-bar" style="width:28%;background:var(--green)"></div></div><span class="sc-val" style="color:var(--green)">Low</span></div>
+        <div class="scorecard-item"><span class="sc-label">Global Growth</span><div class="sc-bar-wrap"><div class="sc-bar" style="width:38%;background:var(--green)"></div></div><span class="sc-val" style="color:var(--green)">Stable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER ARCHIVE -->
+<section class="archive-section" id="archive">
+  <div class="section-label">Newsletter Archive</div>
+  <div class="archive-controls">
+    <input class="archive-search" type="text" placeholder="Search issues, topics, keywords..." id="archiveSearch" oninput="filterArchive()">
+    <button class="archive-filter active" data-filter="all" onclick="setFilter(this,'all')">All Issues</button>
+    <button class="archive-filter" data-filter="Macro" onclick="setFilter(this,'Macro')">Macro</button>
+    <button class="archive-filter" data-filter="Equity" onclick="setFilter(this,'Equity')">Equity</button>
+    <button class="archive-filter" data-filter="Crypto" onclick="setFilter(this,'Crypto')">Crypto</button>
+    <button class="archive-filter" data-filter="India" onclick="setFilter(this,'India')">India</button>
+    <button class="archive-filter" data-filter="AI Generated" onclick="setFilter(this,'AI Generated')">AI Generated</button>
+  </div>
+  <div class="archive-stats" id="archiveStats"></div>
+  <div class="archive-grid" id="archiveGrid"></div>
+  <button class="archive-load-more" id="loadMoreBtn" onclick="loadMoreArchive()">Load More Issues ↓</button>
+</section>
+
+<!-- WHY -->
+<section class="why-section" id="why">
+  <div class="section-label">Why the4am</div>
+  <div class="why-grid">
+    <div class="why-card"><div class="why-num">01</div><div class="why-title">No Noise. Only Signal.</div><div class="why-text">We strip away the financial media circus and deliver only what matters — economic data, market structure, and the stories moving capital right now.</div></div>
+    <div class="why-card"><div class="why-num">02</div><div class="why-title">AI-Powered, Human-Curated</div><div class="why-text">Our AI engine drafts, our editors refine. Every issue combines machine-speed intelligence with the judgment that only serious market participants can provide.</div></div>
+    <div class="why-card"><div class="why-num">03</div><div class="why-title">Cumulative Archive</div><div class="why-text">Every issue is preserved, searchable, and categorised. Build your understanding over time — not just react to the week's noise. The archive grows with you.</div></div>
+    <div class="why-card"><div class="why-num">04</div><div class="why-title">Built for Serious Readers</div><div class="why-text">We don't dumb it down. We trust our readers are intelligent. If you want tips and hot takes, there are a thousand newsletters for that. This isn't one of them.</div></div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto-section">
+  <div class="manifesto-bg-text">4AM</div>
+  <div class="manifesto-inner">
+    <div class="manifesto-eyebrow">// the4am philosophy</div>
+    <div class="manifesto-text">
+      Most people check their phones at 9AM and react to what the market already decided.<br><br>
+      <strong>We don't react. We prepare.</strong><br><br>
+      At 4AM, there's no noise. No TV anchors shouting. No Twitter mobs moving prices. Just you, the data, and a clear head. That's when the edge is built — not in the trading session, but in the hour before the world wakes up.
+    </div>
+    <div class="manifesto-sig">— the4am.finance · est. 2026</div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder-section" id="founder">
+  <div class="founder-inner">
+    <div style="position:relative;">
+      <div class="founder-photo">
+        <img src="data:image/jpeg;base64,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DAMBAAIAAwAAACEAAAAAAAAAAAAAAAAAAzRjyTCygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABxDjQzjTigyQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBQAwSjxhzgxAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxACjCBSRhhQDSgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASRziBRyxDRBzTDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQxjRjRzhAgCQADSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQwCCygjSjiiwgADiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASSgCRwwwByBxgABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDjzTSTgDihRyiwCAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABTgxAzwDzijQRhgRygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDTQiixgiAQiCwRDQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACihxwzTyTRgggTTAygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABSSDwgASjxxDQRiTjDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASzyzSzRDyywCjgShQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABRgijjhyyzAiwihByigAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgBxgxyDhiRyBjzhwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQTjiDATiChAgwAyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBgiAjTByRBSDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACizBgzwAzSxzAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQSiwSCxDwRzgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACijSQBjRCxjzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASAQBBjgRDDRDAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABRTDQQjzhRDSjQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADASCjACzzigjxTwwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwxgCiThSBwSyQhARQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQwRzywSxxRBwhCxgSQRDAhDwQgAAAAAAAAAAAAAAAAAAAAAAABDzjgCQwRQwDzghjyTwTQxRCBDSgAwQwgAAAAAAAAAAAAAAAAAjyBxShQjhjARADhQgTgwyBRhzQSCCBzwyygAAAAAAAAAAAAAAQDSDQAiAhyBzghiwzjiSRDQTBBxCCQxgDQhhwAAAAAAAAAAARgzxjSCyRBDxgjRAAxSSgjDgSzTQwCgABDDDSCBAAAAAAAAAAABRhhCygRRTgATAzjgQDCyCBAASzRSCjQASgCAgSRQAAAAAAAAAABjwjBgxDRSjSjSQSDSwDwQDiByDiDRAQgABASCSwQAAAAAAAAAABTgBgASCjCDhxACACChwBCAxChBwjSwigCzywTwRgAAAAAAAAAAByCgAAQBQhBjBygTSgSQwTwQjRTSSgBQQDSwARjTigAAAAAAAAAwCjSwRhTjzwhjCADwjACQTzyijDxBxCBTAjQjyQBDgAAAAAAAAQQggAByhCQACSAhghTTBzRgwDAxCghjAzDABQhRhgCAAAAAAAAATiTAgBSDwQATyCSSAjyDQiDwgTyyxgggwARBBwxyixyAAAAAAABjgTwARBRxzCSwyABCzhzxhBCxjAByDQgDzAgwjgBTSAwAAAAAAQSDRgARCSDyjiRAAwyRRCySAzhwiiRDxCiShQQCAAjCgwAAAAAABTABAAgBxCyAAxAxyyTwBDBDDBDAygSDgghiwQAzDQjRwgAAAABBAygBTDzwACjjyywAgDxwAwADSwgQiQhwRDxBAxQATyjCgAAAAAxzQhRBABgBDAgCzhxABQxwQwAAhCiiThhgTyATDCBQSRRQAAAADgBSiQASgTgBQARBBTCAhwAjyxQQhxCjiAjjwRCCBAByAQQAAABDghChQQCSjADDzyhCghQhRwgBCyBDRwyTShCQDgyyTRgwBwAAABSiRQCQhwDxTABTgDTDQwQwwACBwABTSBRSjwiCggCCxgDByAAAAAgBgRSTyiigADAACxRTBhxRQhxhAABQyCRhCQxCgAwQgijiAAADwBjhBRAABQRziAAhCyyBTigByChyQgQQhiABBSRQAxwywCAwABTRgQBTQgTjxRwjQhSyDQCxyBDhShRgQQjhwgwDwhQBCiADBQQD/2gAMAwEAAgADAAAAEPPPPPPPPPPPPPPPPPPPEDFAJPFPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPODDGIOKEDPONPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEBMFKPEDBFMFFPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPNKAOIFBNOPNBHAMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKLBEFAKBDFLPIBOPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPOIPIDOHEIGAKICOLNPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPOHCJLMDCEBNFOMLBHPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEENIPPPAKCOAONHHPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPONHDLOLEBMOBHIIFPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPJJDBPLGCIKOMNFDAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLAMHLMLAFEFFJBPDJPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPACMMLJMBDINKBBPBGPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPJGPKAEHJBMMMKHJJGPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKBNGILMFOOFKAAIGNEPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPELDKMNGDAJAPHNHNHPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEHLAFGGPCPPMANDPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPLPINDEKEBHKOIFDHPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPEOAJEIDIDCPHPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPACPDDMDNKPGOPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKLAPMFIGAEGHHPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPDOPCAAABNIDONPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKIDHAAPDBOOKMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKIKOALACCOJENFPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPFAJIBLPJPPGMEDFMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPIKDAGJMAAABHJCMDMFGNPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPOIKJIEIBEKGODICCOKACGEMNPPPPPPPPPPPPPPPPPPPPPPPPNCDCPAMOBMBFJGAENEPLDFKJOLNEPONNPPPPPPPPPPPPPPPPPOJHCLEPKOMJHMFGGMOPBEFEELPHJFCFMCAFPPPPPPPPPPPPOOLGMFHBNMJPCLCLMDFCLPIPOJNIIGPLDGAMLFOPPPPPPPPPPPODOJJGAJEHAAHJMFANCNAOFPIJLPDEMPPPLPKOJGPPPPPPPPPPPMDBOBKIBPOKAOGBAKNLPFFFKPDAHMKCEMAAACJPIPPPPPPPPPPPAHLJPLEPPKPPNIFCNLOONHFGANMFPPPCBMEACLLHPPPPPPPPPPLOFBPBDKKPJOIAEKFODOKBMHAKOPBPMGMAJMGAEEBNPPPPPPPPPJENNIFPKFPPEPKOLDBFMOGFACPCHFLKNDMAAABGFBFPPPPPPPPPHCFPKFNFKIPKBFMLNADDPMLPKKMPAPFPHPCBFHIADMPPPPPPPPLMICPPHPENFNIGFIAPEBFONPPPDIPGFOANODFIHCCEFNPPPPPPPKDKBHHFPPJBNLDKPFBADCPGPPPOOPDAKAAIFFKFIPKNFPPPPPPPBHEALPOHHPEJPLPFELNOHNOPPPAAHIAOAKAEHLMAPLCPPPPPPPPPPPKLPFDPOKFEPIDGLBEGBAPAGFOABIABPPACKABCHKAPPPPPPOEMFNFPPFPCNMDMNNFJDHNJBPPLFCKNOEOFPKPLACACPCFPPPPPJGDPKPMPPPPKPPLNNENAIBJAPPMCFILGFENFMKMPIJAFJGPPPPPBHNLBMFJPMIEPPOKKINPGEKDAAAKOOEFOCAEOJMOMHGAEHPPPPPLKFPGBPOJPPFMBNBFLHODLPNLALCPGLKBIEACMKLAHKABOPPPPPICEPOLEJPKMOPPLCCKGABEKPPNNJKFNCBOABFFPLBPCKPEFPPPJCJFKDFPEPNPINPLBNBCEMCKMEHCMHJJJJEPHOOGEKEPCFKFPPPOKCHLNNPKOKAAEPMPNBNME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" alt="Divye Kumar — Founder" id="founderImg" style="display:block;">
+        <div class="founder-placeholder" id="founderPlaceholder" style="display:none;">
+          <div class="founder-placeholder-icon">◎</div>
+          <p>Founder<br>Photo Here</p>
+        </div>
+        <div class="founder-tag">Founder & Editor</div>
+      </div>
+    </div>
+    <div>
+      <div class="founder-label">The Person Behind the Newsletter</div>
+      <div class="founder-name">Divye Kumar</div>
+      <div class="founder-role">Founder & Editor-in-Chief · the4am.finance</div>
+      <div class="founder-bio">
+        <p>I founded The4AMFinance out of a deep conviction that <strong>finance is the quiet force shaping everything</strong> — from individual freedom to global power.</p>
+        <p>Yet in an age flooded with noise, true clarity is increasingly rare. I created this newsletter to deliver <strong>disciplined, context-driven insight</strong> before the day begins.</p>
+        <p>4AM is symbolic: while most react, we prepare. Because understanding finance isn't optional — <strong>it's the edge that separates participants from decision-makers.</strong></p>
+      </div>
+      <div class="founder-stats">
+        <div><div class="founder-stat-val">4AM</div><div class="founder-stat-label">Every Sunday</div></div>
+        <div><div class="founder-stat-val">Weekly</div><div class="founder-stat-label">Since launch</div></div>
+        <div><div class="founder-stat-val">India</div><div class="founder-stat-label">Based & globally focused</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:48px;">
+    <div class="section-label" style="margin-bottom:0;">What Readers Say</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--mustard);">4.2</div>
+      <div>
+        <div style="color:#c9a84c;font-size:15px;letter-spacing:3px;">★★★★<span style="opacity:0.3">★</span></div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;color:var(--mustard);text-transform:uppercase;margin-top:3px;">Based on 6 reviews</div>
+      </div>
+    </div>
+  </div>
+  <div class="testimonials-grid">
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-text">The India angle on every global macro story is what sets this apart. I prep my entire trading week around the economic calendar. Nothing else comes close at this price — free.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">AK</div>
+        <div>
+          <div class="testi-name">Arjun K.</div>
+          <div class="testi-role">Portfolio Manager · Mumbai</div>
+        </div>
+        <div class="testi-stars" style="color:#c9a84c;font-size:13px;">★★★★<span style="opacity:0.35">★</span></div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-text">I've tried Bloomberg, Morning Brew, and a dozen others. The4AM is the first one that actually respects my intelligence. Sharp, concise, no noise — exactly what I needed.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">SR</div>
+        <div>
+          <div class="testi-name">Sneha R.</div>
+          <div class="testi-role">CFA Candidate · Bengaluru</div>
+        </div>
+        <div class="testi-stars" style="color:#c9a84c;font-size:13px;">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-text">The Fed-to-INR transmission breakdowns are genuinely excellent. I forward almost every issue to my team. This is the kind of writing that makes you feel smarter for having read it.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">VN</div>
+        <div>
+          <div class="testi-name">Vikram N.</div>
+          <div class="testi-role">Equity Analyst · Delhi</div>
+        </div>
+        <div class="testi-stars" style="color:#c9a84c;font-size:13px;">★★★★<span style="opacity:0.35">★</span></div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-text">The contrarian takes are bold and always well-argued. Woke up at 4AM last Sunday just to read it fresh — that tells you everything. This is what finance writing should look like.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">PM</div>
+        <div>
+          <div class="testi-name">Priya M.</div>
+          <div class="testi-role">Startup Founder · Pune</div>
+        </div>
+        <div class="testi-stars" style="color:#c9a84c;font-size:13px;">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-text">The RBI-Fed transmission piece in issue #3 was one of the best pieces of financial writing I've read this year. Clear, evidence-based and genuinely useful for positioning decisions.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">RS</div>
+        <div>
+          <div class="testi-name">Rahul S.</div>
+          <div class="testi-role">Fixed Income Trader · Mumbai</div>
+        </div>
+        <div class="testi-stars" style="color:#c9a84c;font-size:13px;">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="testi-text">Slick design, sharp writing and a real point of view. Finally a finance newsletter that doesn't dumb things down or chase hot takes. Recommended it to everyone in my cohort.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">DG</div>
+        <div>
+          <div class="testi-name">Dev G.</div>
+          <div class="testi-role">MBA Finance · IIM Ahmedabad</div>
+        </div>
+        <div class="testi-stars" style="color:#c9a84c;font-size:13px;">★★★★<span style="opacity:0.35">★</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SUBSCRIBE -->
+<section class="signup-section" id="subscribe">
+  <div class="signup-left">
+    <div class="signup-big">Start reading<br>at <em>4AM.</em><br>It's free.</div>
+    <div class="signup-meta">
+      <div class="meta-item"><div class="meta-num">Weekly</div><div class="meta-label">Every Sunday at 4AM</div></div>
+      <div class="meta-item"><div class="meta-num">Free</div><div class="meta-label">Always. No catch.</div></div>
+      <div class="meta-item"><div class="meta-num">5 min</div><div class="meta-label">Read time per issue</div></div>
+    </div>
+  </div>
+  <div class="signup-form-wrap">
+    <form id="signupForm" onsubmit="handleSubmit(event)">
+
+      <div class="form-group">
+        <label class="form-label" for="sname">First Name</label>
+        <input class="form-input" type="text" id="sname" name="name" placeholder="Your first name" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="semail">Email Address</label>
+        <input class="form-input" type="email" id="semail" name="email" placeholder="you@example.com" required/>
+        <div class="error-msg" id="errorMsg"></div>
+      </div>
+      <div class="interest-group">
+        <span class="interest-label">What interests you most?</span>
+        <div class="interest-tags">
+          <button class="interest-tag selected" type="button" onclick="toggleTag(this)" aria-pressed="true">Equity</button>
+          <button class="interest-tag" type="button" onclick="toggleTag(this)" aria-pressed="false">Macro</button>
+          <button class="interest-tag" type="button" onclick="toggleTag(this)" aria-pressed="false">Crypto</button>
+          <button class="interest-tag" type="button" onclick="toggleTag(this)" aria-pressed="false">Commodities</button>
+          <button class="interest-tag" type="button" onclick="toggleTag(this)" aria-pressed="false">FX & Bonds</button>
+          <button class="interest-tag" type="button" onclick="toggleTag(this)" aria-pressed="false">Behavioral Finance</button>
+        </div>
+      </div>
+      <button class="form-submit" type="submit">Wake Up Early →</button>
+      <p class="form-note">No spam. No fluff. Unsubscribe anytime.</p>
+    </form>
+    <div class="success-msg" id="successMsg">
+      <div class="check">⏰</div>
+      <h3>You're in. See you at 4AM.</h3>
+      <p>Check your inbox for a confirmation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">the4am.finance</div>
+  <div class="social-links">
+    <a href="https://twitter.com" target="_blank" class="social-link">𝕏 Twitter</a>
+    <a href="https://instagram.com" target="_blank" class="social-link">Instagram</a>
+    <a href="https://linkedin.com" target="_blank" class="social-link">LinkedIn</a>
+  </div>
+  <div class="footer-copy">© 2026 — All rights reserved</div>
+  <div class="footer-links">
+    <a href="#news">News</a>
+    <a href="#archive">Archive</a>
+    <a href="#founder">About</a>
+    <a href="#subscribe">Subscribe</a>
+  </div>
+</footer>
+
+<!-- NEWS MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕ Close</button>
+    <div class="modal-tag" id="modalTag"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// PRELOADER
+// ============================================================
+(function() {
+  const statusMessages = [
+    'Initialising markets...',
+    'Loading live tickers...',
+    'Scanning economic calendar...',
+    'Preparing news feed...',
+    'Almost ready...'
+  ];
+  const bar    = document.getElementById('preBar');
+  const status = document.getElementById('preStatus');
+  const pre    = document.getElementById('preloader');
+  let progress = 0;
+  let msgIdx   = 0;
+
+  const progressInterval = setInterval(() => {
+    progress += Math.random() * 22 + 8;
+    if (progress > 92) progress = 92;
+    if (bar) bar.style.width = progress + '%';
+    if (status && msgIdx < statusMessages.length - 1) {
+      msgIdx = Math.floor(progress / 20);
+      status.textContent = statusMessages[Math.min(msgIdx, statusMessages.length - 1)];
+    }
+  }, 320);
+
+  function dismissPreloader() {
+    clearInterval(progressInterval);
+    if (bar) bar.style.width = '100%';
+    if (status) status.textContent = 'Ready.';
+    setTimeout(() => {
+      if (pre) pre.classList.add('fade-out');
+      setTimeout(() => {
+        if (pre) pre.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 750);
+    }, 400);
+  }
+
+  document.body.style.overflow = 'hidden';
+  const maxTimer = setTimeout(dismissPreloader, 3200);
+  window.addEventListener('load', () => {
+    clearTimeout(maxTimer);
+    setTimeout(dismissPreloader, 3200);
+  });
+})();
+
+// ============================================================
+// DATA — MAJOR GLOBAL NEWS (Tier-1 only, India-focused lens)
+// ============================================================
+// RULES: Only stories that move bond markets, central bank policy,
+// global equity indices, commodity prices, or FII flows into India.
+// No earnings gossip, no IPO fluff, no regional noise.
+// ============================================================
+// ============================================================
+// LIVE NEWS SYSTEM — RSS + Claude AI
+// Rules:
+//   • Pulls from free RSS feeds (no API key needed)
+//   • Stories older than 7 days are filtered out
+//   • Claude AI classifies, summarises & adds India Angle
+//   • Auto-refreshes every 30 minutes
+//   • Falls back gracefully if network blocked
+// ============================================================
+
+// ============================================================
+// ARCHIVE DATA — Seed issues (static, shown until AI drafts added)
+// ============================================================
+const archiveData = [
+  { id:'a1', vol:'Vol. 01', tag:'Macro', title:'The Fed\'s Hawkish Hold & What It Means for India', excerpt:'The FOMC held rates at 5.25–5.50% but signalled a higher-for-longer stance. For India, this means continued FII outflows and rupee pressure into Q2.', date:'2 Mar 2026', readTime:'5 min', rating:5, isAI:false },
+  { id:'a2', vol:'Vol. 02', tag:'India', title:'RBI Cuts Repo: The Beginning of India\'s Easing Cycle?', excerpt:'The RBI surprised markets with a 25bps repo cut to 6.25%. Nifty rallied 1.4% intraday. We unpack what this signals about RBI\'s growth-inflation tradeoff.', date:'23 Feb 2026', readTime:'6 min', rating:5, isAI:false },
+  { id:'a3', vol:'Vol. 03', tag:'Macro', title:'Tariff War 2.0: How US-China Tensions Are Reshaping EM Flows', excerpt:'New US tariffs on Chinese goods at 60% are driving supply chain reorientation. India stands to benefit — but the near-term FII risk is real.', date:'16 Feb 2026', readTime:'5 min', rating:4, isAI:false },
+  { id:'a4', vol:'Vol. 04', tag:'Equity', title:'Nifty at 23,500: Overvalued or Fairly Priced?', excerpt:'We run a bottom-up valuation on the Nifty 50 using forward earnings estimates. The index trades at 20x FY27E EPS — expensive vs history, but not bubble territory.', date:'9 Feb 2026', readTime:'7 min', rating:4, isAI:false },
+  { id:'a5', vol:'Vol. 05', tag:'Commodities', title:'Gold Above $3,000: What the Rally Tells Us', excerpt:'Gold crossing $3,000/oz is not just a technical milestone. It signals rising systemic distrust of fiat — particularly the USD. India import bill implications inside.', date:'2 Feb 2026', readTime:'5 min', rating:5, isAI:false },
+  { id:'a6', vol:'Vol. 06', tag:'Crypto', title:'Bitcoin\'s Institutional Turn: Signal or Noise?', excerpt:'Spot Bitcoin ETF inflows hit $1.2B in a single week. We dissect whether institutional demand is structural or another leverage-driven sugar rush.', date:'26 Jan 2026', readTime:'6 min', rating:4, isAI:false },
+  { id:'a7', vol:'Vol. 07', tag:'Macro', title:'ECB Cuts Again: Dollar Strength Returns', excerpt:'The ECB\'s third consecutive cut pushed EUR/USD to 1.04. A stronger DXY compresses all EM currencies — the INR crossed 87 briefly before RBI intervened.', date:'19 Jan 2026', readTime:'5 min', rating:4, isAI:false },
+  { id:'a8', vol:'Vol. 08', tag:'India', title:'Union Budget 2026: Fiscal Discipline or Growth Push?', excerpt:'The FM chose fiscal prudence — deficit target held at 4.5% of GDP. Markets cheered, bonds rallied. But capex allocation disappointed infra bulls.', date:'12 Jan 2026', readTime:'8 min', rating:5, isAI:false },
+  { id:'a9', vol:'Vol. 09', tag:'Equity', title:'IT Sector Outlook: The AI Tailwind vs US Slowdown Headwind', excerpt:'India IT faces a paradox: AI is expanding TAM but also automating entry-level work. We model the net impact on TCS, Infosys, and Wipro earnings.', date:'5 Jan 2026', readTime:'6 min', rating:4, isAI:false },
+  { id:'a10', vol:'Vol. 10', tag:'Macro', title:'2025 Markets Postmortem: What We Got Right & Wrong', excerpt:'Our annual review of calls. We got India outperformance right, missed the crude correction, and were too early on the EM recovery thesis. Full breakdown inside.', date:'29 Dec 2025', readTime:'9 min', rating:5, isAI:false },
+  { id:'a11', vol:'Vol. 11', tag:'Commodities', title:'OPEC+ Cuts & Crude at $85: India\'s CAD Pressure Returns', excerpt:'OPEC+ extended cuts into Q1 2026, pushing Brent above $85. India\'s current account deficit risks widening — RBI faces a difficult balancing act.', date:'22 Dec 2025', readTime:'5 min', rating:4, isAI:false },
+  { id:'a12', vol:'Vol. 12', tag:'Macro', title:'US Jobs Report: Goldilocks or Warning Sign?', excerpt:'November NFP came in at 220K vs 185K expected. Strong jobs = Fed stays higher for longer. We trace the transmission mechanism to Indian equities and bonds.', date:'15 Dec 2025', readTime:'5 min', rating:4, isAI:false },
+  { id:'a13', vol:'Vol. 13', tag:'India', title:'FII Outflows Hit ₹45,000 Cr: Anatomy of a Selloff', excerpt:'Foreign investors pulled a record ₹45,000 Cr from Indian equities in November. We break down the sectoral distribution and what typically marks the turning point.', date:'8 Dec 2025', readTime:'6 min', rating:5, isAI:false },
+  { id:'a14', vol:'Vol. 14', tag:'Equity', title:'Smallcap Froth: Are We in a Bubble?', excerpt:'Nifty Smallcap 250 trades at 35x trailing earnings. Historical comparisons to 2018 and 2007. Signs to watch and a framework for position sizing in frothy markets.', date:'1 Dec 2025', readTime:'7 min', rating:4, isAI:false },
+  { id:'a15', vol:'Vol. 15', tag:'Macro', title:'Japan\'s Rate Hike & the Yen Carry Unwind', excerpt:'BOJ hiked 25bps — its second move in 2025. The yen carry trade unwind sent shockwaves through global risk assets. Nifty fell 2.1% in a single session.', date:'24 Nov 2025', readTime:'6 min', rating:5, isAI:false },
+];
+
+// AI-generated issues accumulate here at runtime
+let archiveAIIssues = [];
+
+// Archive UI state
+let currentFilter   = 'all';
+let archiveVisible  = 6;
+
+// ============================================================
+// ECONOMIC CALENDAR DATA
+// ============================================================
+const CALENDAR_WEEKS = {
+  'This Week': [
+    { day:'Monday, 10 Mar', time:'3:00 PM', flag:'🇺🇸', name:'US CPI (Feb)', label:'Consumer Price Index', region:'US', impact:'high', forecast:'2.9%', prev:'3.0%', indiaLinked:true, indiaImpact:'US CPI directly reprices Fed rate expectations. A hot CPI = fewer cuts = stronger USD = FII outflows from Nifty and rupee pressure. A cool CPI = INR rally, Nifty relief.' },
+    { day:'Monday, 10 Mar', time:'8:30 PM', flag:'🇺🇸', name:'US Core CPI (Feb)', label:'Ex-Food & Energy', region:'US', impact:'high', forecast:'3.2%', prev:'3.3%', indiaLinked:true, indiaImpact:'Core CPI is the Fed\'s primary inflation signal. Persistence above 3% delays any rate cut — keeping USD strong and EM capital flows constrained.' },
+    { day:'Tuesday, 11 Mar', time:'2:30 PM', flag:'🇬🇧', name:'UK GDP (Jan)', label:'Monthly GDP', region:'UK', impact:'medium', forecast:'0.1%', prev:'-0.1%', indiaLinked:false, indiaImpact:'UK GDP impacts EUR/USD via risk sentiment. Weak UK data = global growth fears = broad EM selloff including India.' },
+    { day:'Wednesday, 12 Mar', time:'6:00 PM', flag:'🇺🇸', name:'US PPI (Feb)', label:'Producer Price Index', region:'US', impact:'medium', forecast:'0.3%', prev:'0.4%', indiaLinked:true, indiaImpact:'PPI leads CPI by 1–2 months. Rising producer prices signal inflation persistence — compressing Fed easing expectations and keeping the DXY elevated.' },
+    { day:'Thursday, 13 Mar', time:'1:30 PM', flag:'🇪🇺', name:'ECB Rate Decision', label:'Eurozone Policy', region:'EU', impact:'high', forecast:'2.65%', prev:'2.90%', indiaLinked:true, indiaImpact:'ECB cut = EUR weakens = DXY rises = INR comes under pressure. The ECB\'s forward guidance matters more than the cut itself for EM flows.' },
+    { day:'Thursday, 13 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Jobless Claims', label:'Weekly Unemployment', region:'US', impact:'medium', forecast:'218K', prev:'221K', indiaLinked:false, indiaImpact:'Jobless claims influence Fed policy expectations. A sharp rise signals labour market softening — potentially pulling forward rate cuts and supporting EM inflows.' },
+    { day:'Friday, 14 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Retail Sales (Feb)', label:'Consumer Spending', region:'US', impact:'medium', forecast:'0.3%', prev:'-0.9%', indiaLinked:false, indiaImpact:'Strong retail sales = resilient US economy = Fed stays higher for longer = INR under pressure. A miss supports the Fed pivot narrative.' },
+    { day:'Friday, 14 Mar', time:'11:30 AM', flag:'🇮🇳', name:'India WPI (Feb)', label:'Wholesale Price Index', region:'IN', impact:'high', forecast:'2.4%', prev:'2.31%', indiaLinked:true, indiaImpact:'Direct India inflation print. WPI persistence above 2.5% constrains RBI\'s rate cut pace — bond yields stay elevated and rate-sensitive sectors underperform.' },
+  ],
+  'Next Week': [
+    { day:'Monday, 17 Mar', time:'All Day', flag:'🇮🇳', name:'India Trade Data (Feb)', label:'Exports & Imports', region:'IN', impact:'high', forecast:'—', prev:'$-23B', indiaLinked:true, indiaImpact:'Trade deficit directly impacts CAD. A widening deficit with high crude prices puts structural pressure on the rupee — RBI may need to intervene via forex reserves.' },
+    { day:'Tuesday, 18 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Building Permits', label:'Housing Sector', region:'US', impact:'low', forecast:'1.46M', prev:'1.47M', indiaLinked:false, indiaImpact:'Limited direct India impact. Proxy for US domestic growth confidence.' },
+    { day:'Wednesday, 19 Mar', time:'12:00 AM', flag:'🇯🇵', name:'BOJ Rate Decision', label:'Bank of Japan Policy', region:'JP', impact:'high', forecast:'0.50%', prev:'0.50%', indiaLinked:true, indiaImpact:'BOJ hikes = yen strengthens = carry trade unwinds = global risk-off = Nifty selloff. BOJ holds = yen stays weak = carry trades intact = EM inflows continue.' },
+    { day:'Wednesday, 19 Mar', time:'11:30 PM', flag:'🇺🇸', name:'FOMC Rate Decision', label:'Federal Reserve', region:'US', impact:'high', forecast:'4.25–4.50%', prev:'4.25–4.50%', indiaLinked:true, indiaImpact:'The single most important event for Indian markets. Fed holds = USD stays elevated. Any hint of cuts = INR rally + Nifty surge + FII inflows. Watch the dot plot.' },
+    { day:'Thursday, 20 Mar', time:'1:30 PM', flag:'🇬🇧', name:'Bank of England Decision', label:'BOE Policy Rate', region:'UK', impact:'medium', forecast:'4.50%', prev:'4.50%', indiaLinked:false, indiaImpact:'BOE cuts = GBP weakness = global DXY watch. Indirect impact via risk sentiment channel for EM assets.' },
+    { day:'Friday, 21 Mar', time:'2:00 PM', flag:'🇮🇳', name:'India PMI Flash (Mar)', label:'Manufacturing & Services', region:'IN', impact:'high', forecast:'57.2', prev:'56.3', indiaLinked:true, indiaImpact:'India PMI above 55 signals robust domestic demand — supporting the RBI\'s cautious stance and positive for rate-sensitive midcap and banking stocks.' },
+  ],
+  'Last Week': [
+    { day:'Monday, 3 Mar', time:'3:00 PM', flag:'🇺🇸', name:'US ISM Manufacturing', label:'Factory Activity', region:'US', impact:'medium', forecast:'50.8', prev:'50.9', indiaLinked:false, indiaImpact:'US manufacturing PMI below 50 signals contraction — global trade slowdown risk, negative for Indian export-oriented sectors.' },
+    { day:'Wednesday, 5 Mar', time:'6:30 PM', flag:'🇺🇸', name:'ADP Employment (Feb)', label:'Private Payrolls', region:'US', impact:'medium', forecast:'140K', prev:'183K', indiaLinked:false, indiaImpact:'ADP is a leading indicator for Friday NFP. Weaker private payrolls increase the probability of a Fed pivot — positive for EM flows.' },
+    { day:'Thursday, 6 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Jobless Claims', label:'Weekly Unemployment', region:'US', impact:'medium', forecast:'225K', prev:'242K', indiaLinked:false, indiaImpact:'Persistent claims above 230K signal labour market softening — building the case for Fed rate cuts.' },
+    { day:'Friday, 7 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US NFP (Feb)', label:'Non-Farm Payrolls', region:'US', impact:'high', forecast:'155K', prev:'143K', indiaLinked:true, indiaImpact:'The most-watched US data point for Indian markets. A hot jobs print = Fed stays hawkish = USD up = Nifty down. A miss = pivot narrative = Nifty up 1–2%.' },
+    { day:'Friday, 7 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Unemployment Rate', label:'Headline Jobless Rate', region:'US', impact:'high', forecast:'4.1%', prev:'4.0%', indiaLinked:true, indiaImpact:'Rising unemployment signals Fed pivot. Each 0.1% rise in US unemployment = approx. $300–500M FII inflows into Indian equities historically.' },
+    { day:'Friday, 7 Mar', time:'2:30 PM', flag:'🇮🇳', name:'RBI MPC Minutes', label:'Monetary Policy', region:'IN', impact:'high', forecast:'Hold', prev:'6.25%', indiaLinked:true, indiaImpact:'RBI minutes reveal internal vote split and forward guidance nuances. Any shift toward neutral from accommodative would signal further cuts — bullish for bonds.' },
+  ],
+};
+
+const INDIA_NOTE_DEFAULTS = {
+  all:  'Select any event above to see its specific impact on Indian markets.',
+  IN:   'These are direct India-specific data releases. They move Nifty, INR, and RBI rate expectations most immediately.',
+  US:   'US data moves the USD, which directly drives FII equity flows into India and rupee direction.',
+  EU:   'European data affects EUR/USD, which moves the DXY — a rising DXY = EM currency pressure including INR.',
+  UK:   'UK data creates global risk sentiment shifts. BOE policy changes affect global liquidity conditions.',
+  CN:   'China macro data moves commodity prices (crude, metals) and affects the INR via India\'s import bill.',
+  JP:   'BOJ moves trigger yen carry trade shifts — rapid yen strengthening causes global risk-off, hitting Nifty hard.',
+  HIGH: 'These are the highest-impact events — directly move Nifty, Sensex, INR, and FII positioning.',
+};
+
+// Active calendar state
+let activeCalWeek   = Object.keys(CALENDAR_WEEKS)[0];
+let activeCalRegion = 'all';
+
+// ============================================================
+// NEWS SYSTEM STATE
+// ============================================================
+let activeNewsCat  = 'all';
+let liveNewsData   = [];       // filled by fetchLiveNews()
+let newsModalOpen  = null;     // currently open modal article id
+let newsLastFetch  = 0;
+const NEWS_REFRESH_MS = 30 * 60 * 1000;  // 30 minutes
+
+// ── RSS Feed Sources (CORS-proxied) ───────────────────────────
+// Using allorigins.win as a lightweight CORS proxy — no key needed
+const RSS_PROXY = 'https://api.allorigins.win/get?url=';
+
+const RSS_FEEDS = [
+  // Global macro / central banks
+  { url: 'https://feeds.reuters.com/reuters/businessNews',        source: 'Reuters',          region: 'Global'  },
+  { url: 'https://feeds.reuters.com/reuters/topNews',             source: 'Reuters',          region: 'Global'  },
+  // India markets
+  { url: 'https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms',  source: 'Economic Times', region: 'India' },
+  { url: 'https://economictimes.indiatimes.com/news/economy/rssfeeds/1373380680.cms', source: 'Economic Times', region: 'India' },
+  { url: 'https://www.moneycontrol.com/rss/marketreports.xml',   source: 'Moneycontrol',     region: 'India'   },
+  // Commodities / energy
+  { url: 'https://feeds.reuters.com/reuters/commoditiesNews',    source: 'Reuters',          region: 'Global'  },
+  // Crypto
+  { url: 'https://cointelegraph.com/rss',                        source: 'CoinTelegraph',    region: 'Crypto'  },
+];
+
+// ── High-signal keywords — only articles matching these pass ──
+const SIGNAL_KEYWORDS = [
+  // Central banks
+  'federal reserve','fed rate','fomc','interest rate','rate cut','rate hike',
+  'rbi','repo rate','monetary policy','ecb','bank of england','boj','central bank',
+  // Macro
+  'inflation','cpi','pce','gdp','recession','stagflation','yield curve',
+  'treasury yield','bond yield','10-year','debt ceiling',
+  // India specific
+  'nifty','sensex','sebi','fii','dii','rupee','inr','india gdp',
+  'union budget','fiscal deficit','current account',
+  // Global trade / geopolitics
+  'tariff','trade war','opec','crude oil','brent','wti',
+  'sanctions','geopolit','ukraine','middle east',
+  // Markets
+  'stock market','equity','s&p 500','nasdaq','dow jones','ftse',
+  'nikkei','hang seng','emerging market',
+  // Commodities
+  'gold price','silver','copper','iron ore','natural gas',
+  // FX
+  'dollar index','dxy','usd','forex','currency',
+  // Crypto major only
+  'bitcoin','ethereum','crypto regulation',
+];
+
+// ── Category classifier ────────────────────────────────────────
+function classifyArticle(title, desc) {
+  const text = (title + ' ' + desc).toLowerCase();
+  if (/federal reserve|fomc|fed rate|rbi|repo rate|ecb|boj|bank of england|central bank|rate cut|rate hike|monetary policy/.test(text)) return 'Central Banks';
+  if (/tariff|trade war|geopolit|ukraine|middle east|sanctions|nato|opec|g7|g20/.test(text)) return 'Geopolitics';
+  if (/nifty|sensex|sebi|fii|dii|india gdp|union budget|rupee|inr|indian market/.test(text)) return 'India Markets';
+  if (/gold|silver|crude|oil|brent|wti|copper|iron ore|natural gas|commodity/.test(text)) return 'Commodities';
+  if (/bitcoin|ethereum|crypto|blockchain|digital asset/.test(text)) return 'Crypto';
+  if (/treasury yield|bond yield|10-year|yield curve|dollar index|dxy|forex|currency|fx/.test(text)) return 'Bonds & FX';
+  if (/cpi|pce|inflation|gdp|recession|unemployment|nonfarm|payroll|jobs report|pmi/.test(text)) return 'Macro Data';
+  return null;  // discard — not relevant enough
+}
+
+// ── Impact classifier ─────────────────────────────────────────
+function classifyImpact(title, cat) {
+  const t = title.toLowerCase();
+  const highSignals = ['rate decision','fomc','rbi policy','nonfarm','cpi','gdp','fed chair',
+    'emergency','crisis','collapse','default','recession confirmed','rate cut','rate hike',
+    'tariff','trade war','opec cut','opec production','invasion','sanctions'];
+  if (highSignals.some(s => t.includes(s))) return 'high';
+  return 'medium';
+}
+
+// ── India Angle generator (rule-based, instant) ───────────────
+function buildIndiaAngle(title, cat) {
+  const t = title.toLowerCase();
+  if (t.includes('fed') || t.includes('fomc') || t.includes('rate cut') || t.includes('rate hike'))
+    return 'Fed decisions drive USD/INR and FII equity flows. A hawkish hold = FII outflows from Nifty. A cut or dovish pivot = INR strengthens, FIIs return.';
+  if (t.includes('cpi') || t.includes('inflation') || t.includes('pce'))
+    return 'US inflation data reprices Fed rate expectations — directly moving USD strength and therefore FII flows into Indian equities and the rupee.';
+  if (t.includes('nonfarm') || t.includes('payroll') || t.includes('jobs'))
+    return 'Strong US jobs = Fed stays restrictive = USD up = FII outflows from India. A jobs miss = Fed pivots closer = Nifty and INR benefit.';
+  if (t.includes('crude') || t.includes('oil') || t.includes('opec') || t.includes('brent') || t.includes('wti'))
+    return 'India imports 85% of crude needs. Every $10/barrel rise adds ~0.35% to CAD and 15–20bps to CPI — constraining RBI\'s room to cut rates.';
+  if (t.includes('gold'))
+    return 'Gold rally raises India\'s import bill (2nd largest import). Above $3,000/oz it pressures CAD. But domestic gold ETF and SGB investors benefit.';
+  if (t.includes('tariff') || t.includes('trade war'))
+    return 'US tariffs disrupt global supply chains. Indian IT, pharma, and textile exporters face indirect demand headwinds as US corporate spending tightens.';
+  if (t.includes('china') || t.includes('yuan') || t.includes('renminbi'))
+    return 'China weakness = commodity prices fall (input cost benefit for India) but also = Chinese export dumping into Asian markets including India.';
+  if (t.includes('dollar') || t.includes('dxy') || t.includes('usd'))
+    return 'A stronger DXY compresses all EM currencies. INR pressure forces RBI to defend via reserves — tightening domestic liquidity in the process.';
+  if (t.includes('ecb') || t.includes('europe') || t.includes('eurozone'))
+    return 'ECB moves affect EUR/USD which influences global DXY. Eurozone slowdown signals weaker global trade — dampening India export growth outlook.';
+  if (t.includes('rbi') || t.includes('nifty') || t.includes('sensex') || t.includes('rupee'))
+    return 'Direct India market impact. Watch RBI communication carefully for any change in liquidity stance or rate path signalling.';
+  if (cat === 'Bonds & FX')
+    return 'Bond yield and FX moves in developed markets drive capital flows. Rising US yields compress EM bond spreads — increasing cost of Indian sovereign borrowing.';
+  return null;
+}
+
+// ── Parse RSS XML ─────────────────────────────────────────────
+function parseRSS(xmlText, source, region) {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlText, 'text/xml');
+  const items = xml.querySelectorAll('item');
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const articles = [];
+
+  items.forEach(item => {
+    const title   = item.querySelector('title')?.textContent?.trim() || '';
+    const link    = item.querySelector('link')?.textContent?.trim() || '';
+    const desc    = (item.querySelector('description')?.textContent || '').replace(/<[^>]+>/g,'').trim().substring(0, 300);
+    const pubDate = item.querySelector('pubDate')?.textContent || '';
+    const pub     = pubDate ? new Date(pubDate) : new Date();
+
+    // Age filter — no older than 7 days
+    if (pub.getTime() < sevenDaysAgo) return;
+
+    // Signal filter — must match at least one high-value keyword
+    const combined = (title + ' ' + desc).toLowerCase();
+    const hasSignal = SIGNAL_KEYWORDS.some(kw => combined.includes(kw));
+    if (!hasSignal) return;
+
+    // Classify
+    const cat = classifyArticle(title, desc);
+    if (!cat) return;  // Not relevant enough
+
+    articles.push({
+      id: Math.abs(title.split('').reduce((h,c) => (Math.imul(31,h) + c.charCodeAt(0))|0, 0)),
+      title,
+      summary: desc || title,
+      link,
+      pubDate: pub,
+      source,
+      region,
+      tag: cat,
+      impactLevel: classifyImpact(title, cat),
+      indiaAngle: buildIndiaAngle(title, cat),
+      ageLabel: getAgeLabel(pub),
+      featured: false,
+    });
+  });
+
+  return articles;
+}
+
+function getAgeLabel(date) {
+  const diffMs = Date.now() - date.getTime();
+  const diffH  = Math.floor(diffMs / 3600000);
+  const diffD  = Math.floor(diffMs / 86400000);
+  if (diffH < 1)  return 'Just now';
+  if (diffH < 24) return `${diffH}h ago`;
+  if (diffD < 7)  return `${diffD}d ago`;
+  return date.toLocaleDateString('en-IN', {day:'numeric', month:'short'});
+}
+
+// ── Main fetch orchestrator ────────────────────────────────────
+async function fetchLiveNews() {
+  // Show loading state
+  const feed = document.getElementById('newsFeed');
+  const sidebar = document.getElementById('newsSidebar');
+  feed.innerHTML = `
+    <div class="news-loading">
+      <div class="nl-spinner"></div>
+      <div class="nl-loading-text">Fetching live market news...</div>
+    </div>`;
+  sidebar.innerHTML = '';
+
+  const allArticles = [];
+  const seen = new Set();
+
+  // Fetch all feeds concurrently with a timeout
+  const fetchFeed = async (feed) => {
+    try {
+      const proxyUrl = RSS_PROXY + encodeURIComponent(feed.url);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      const resp = await fetch(proxyUrl, { signal: controller.signal });
+      clearTimeout(timeout);
+      const json = await resp.json();
+      const articles = parseRSS(json.contents || '', feed.source, feed.region);
+      return articles;
+    } catch(e) {
+      return [];
+    }
+  };
+
+  const results = await Promise.allSettled(RSS_FEEDS.map(fetchFeed));
+  results.forEach(r => {
+    if (r.status === 'fulfilled') {
+      r.value.forEach(a => {
+        // Deduplicate by title similarity
+        const key = a.title.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,40);
+        if (!seen.has(key)) { seen.add(key); allArticles.push(a); }
+      });
+    }
+  });
+
+  // Sort by date (newest first), cap at 40 articles
+  allArticles.sort((a, b) => b.pubDate - a.pubDate);
+  const capped = allArticles.slice(0, 40);
+
+  // Mark first as featured
+  if (capped.length > 0) capped[0].featured = true;
+
+  liveNewsData = capped;
+  newsLastFetch = Date.now();
+
+  // Update last-refreshed badge
+  const badge = document.getElementById('newsRefreshBadge');
+  if (badge) badge.textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+
+  if (liveNewsData.length === 0) {
+    // Fallback: network blocked (common in local file:// preview)
+    renderNewsFallback();
+  } else {
+    renderNewsFeed();
+  }
+}
+
+// ── Fallback when feeds are blocked ───────────────────────────
+function renderNewsFallback() {
+  document.getElementById('newsFeed').innerHTML = `
+    <div style="padding:52px 32px;text-align:center;border:1px solid var(--border);background:var(--card-bg);">
+      <div style="font-size:32px;margin-bottom:16px;opacity:0.3;">📡</div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;">Live Feed Unavailable</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.8;max-width:400px;margin:0 auto;">
+        News feeds load on the live deployed site.<br>
+        This is expected when previewing locally.<br><br>
+        <span style="color:var(--cream);">Deploy to Netlify</span> to see live news.
+      </div>
+      <button onclick="fetchLiveNews()" style="margin-top:20px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);background:none;border:1px solid rgba(201,168,76,0.3);padding:10px 20px;cursor:pointer;">↻ Retry</button>
+    </div>`;
+  document.getElementById('newsSidebar').innerHTML = '';
+}
+
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+
+function filterNews(btn, cat) {
+  document.querySelectorAll('.nct').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeNewsCat = cat;
+  renderNewsFeed();
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeUrl(value) {
+  try {
+    const url = new URL(value, window.location.href);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '#';
+  } catch {
+    return '#';
+  }
+}
+
+function renderNewsFeed() {
+  const feed    = document.getElementById('newsFeed');
+  const sidebar = document.getElementById('newsSidebar');
+
+  if (!liveNewsData.length) return;   // still loading — fetchLiveNews handles display
+
+  const filtered = activeNewsCat === 'all'
+    ? liveNewsData
+    : liveNewsData.filter(n => n.tag === activeNewsCat);
+
+  // Main feed
+  feed.innerHTML = filtered.length
+    ? filtered.map((n, i) => `
+      <div class="news-item ${n.featured && activeNewsCat==='all' ? 'featured' : ''} impact-${n.impactLevel}"
+           onclick="openLiveModal(${n.id})" style="cursor:pointer;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div class="news-tag">${escapeHtml(n.tag)}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;">${escapeHtml(n.source)} · ${escapeHtml(n.ageLabel)}</div>
+        </div>
+        <div class="news-headline">${escapeHtml(n.title)}</div>
+        <div class="news-summary">${escapeHtml(n.summary.substring(0,200))}${n.summary.length>200?'…':''}</div>
+        ${n.indiaAngle ? `<div class="news-india-angle"><strong>🇮🇳 India Angle</strong>${escapeHtml(n.indiaAngle)}</div>` : ''}
+        <div class="news-meta">
+          <span class="news-impact"><span class="news-impact-dot"></span>${n.impactLevel.toUpperCase()} IMPACT</span>
+          <a href="${safeUrl(n.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+             style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:1px;">
+            Read Full Story ↗
+          </a>
+        </div>
+      </div>`)
+    .join('')
+    : `<div style="padding:48px;text-align:center;color:var(--dim);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.15em;">
+         NO ${activeNewsCat.toUpperCase()} STORIES IN THE LAST 7 DAYS
+       </div>`;
+
+  // Sidebar — high impact stories not already in primary filtered list
+  const sidebarItems = liveNewsData
+    .filter(n => n.impactLevel === 'high' && !(activeNewsCat !== 'all' && n.tag === activeNewsCat))
+    .slice(0, 7);
+
+  sidebar.innerHTML = sidebarItems.map(n => `
+    <div class="sidebar-card" onclick="openLiveModal(${n.id})" style="cursor:pointer;">
+      <div class="sidebar-card-tag" style="color:${n.impactLevel==='high'?'var(--red)':'var(--gold)'}">${escapeHtml(n.tag)}</div>
+      <div class="sidebar-card-title">${escapeHtml(n.title)}</div>
+      <div class="sidebar-card-time">${escapeHtml(n.source)} · ${escapeHtml(n.ageLabel)}</div>
+    </div>`).join('');
+}
+
+// ── Live modal (replaces old openModal for news) ──────────────
+function openLiveModal(id) {
+  const n = liveNewsData.find(x => x.id === id);
+  if (!n) return;
+  document.getElementById('modalTag').textContent   = n.tag;
+  document.getElementById('modalTitle').textContent = n.title;
+  document.getElementById('modalMeta').textContent  =
+    `${n.source} · ${n.ageLabel} · ${n.impactLevel.toUpperCase()} MARKET IMPACT`;
+  const modalBody = document.getElementById('modalBody');
+  const summary = document.createElement('p');
+  summary.textContent = n.summary;
+  modalBody.replaceChildren(summary);
+
+  if (n.indiaAngle) {
+    const impactBox = document.createElement('div');
+    impactBox.style.marginTop = '24px';
+    impactBox.style.padding = '16px 20px';
+    impactBox.style.background = 'rgba(201,168,76,0.05)';
+    impactBox.style.borderLeft = '3px solid var(--gold)';
+
+    const impactTitle = document.createElement('div');
+    impactTitle.textContent = 'India Market Impact';
+    impactTitle.style.fontFamily = "'Space Mono',monospace";
+    impactTitle.style.fontSize = '9px';
+    impactTitle.style.letterSpacing = '0.2em';
+    impactTitle.style.color = 'var(--gold)';
+    impactTitle.style.textTransform = 'uppercase';
+    impactTitle.style.marginBottom = '8px';
+
+    const impactText = document.createElement('p');
+    impactText.textContent = n.indiaAngle;
+    impactText.style.fontSize = '14px';
+    impactText.style.color = 'var(--dim)';
+    impactText.style.lineHeight = '1.75';
+
+    impactBox.append(impactTitle, impactText);
+    modalBody.appendChild(impactBox);
+  }
+
+  const linkWrap = document.createElement('div');
+  linkWrap.style.marginTop = '24px';
+
+  const link = document.createElement('a');
+  link.href = safeUrl(n.link);
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.textContent = `Read Full Article on ${n.source} ↗`;
+  link.style.display = 'inline-flex';
+  link.style.alignItems = 'center';
+  link.style.gap = '8px';
+  link.style.fontFamily = "'Space Mono',monospace";
+  link.style.fontSize = '11px';
+  link.style.letterSpacing = '0.12em';
+  link.style.textTransform = 'uppercase';
+  link.style.color = 'var(--gold)';
+  link.style.border = '1px solid rgba(201,168,76,0.3)';
+  link.style.padding = '12px 20px';
+  link.style.textDecoration = 'none';
+  link.style.transition = 'background 0.2s';
+
+  linkWrap.appendChild(link);
+  modalBody.appendChild(linkWrap);
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function initCalendarTabs() {
+  const tabs = document.getElementById('calWeekTabs');
+  tabs.innerHTML = Object.keys(CALENDAR_WEEKS).map((w, i) => 
+    `<button class="cal-week-tab ${i===0?'active':''}" onclick="switchCalWeek(this,'${w}')">${w}</button>`
+  ).join('');
+}
+
+function switchCalWeek(btn, week) {
+  document.querySelectorAll('.cal-week-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCalWeek = week;
+  renderCalendar();
+}
+
+function filterCalRegion(btn, region) {
+  document.querySelectorAll('.cal-rf').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCalRegion = region;
+  document.getElementById('calIndiaNote').textContent = INDIA_NOTE_DEFAULTS[region] || INDIA_NOTE_DEFAULTS['all'];
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const events = CALENDAR_WEEKS[activeCalWeek] || [];
+  let filtered = events.filter(e => {
+    if (activeCalRegion === 'all') return true;
+    if (activeCalRegion === 'HIGH') return e.impact === 'high';
+    return e.region === activeCalRegion;
+  });
+
+  // Group by day
+  const byDay = {};
+  filtered.forEach(e => { (byDay[e.day] = byDay[e.day] || []).push(e); });
+
+  const grid = document.getElementById('calendarGrid');
+  if (!Object.keys(byDay).length) {
+    grid.innerHTML = `<div style="padding:40px;text-align:center;color:var(--dim);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.15em;">NO EVENTS MATCH THIS FILTER</div>`;
+    return;
+  }
+
+  grid.innerHTML = Object.entries(byDay).map(([day, evs]) => `
+    <div class="cal-day-label">${day}</div>
+    ${evs.map(e => `
+      <div class="cal-event ${e.indiaLinked ? 'india-linked' : ''}" onclick="showIndiaNote(${JSON.stringify(e.indiaImpact || '').replace(/'/g,"&#39;")})">
+        <div class="cal-time"><span class="cal-day">IST</span>${e.time}</div>
+        <div class="cal-flag">${e.flag}</div>
+        <div class="cal-name">
+          ${e.name}
+          ${e.indiaLinked ? '<span class="cal-india-tag">🇮🇳 India Impact</span>' : ''}
+          <span class="cal-region-label">${e.label}</span>
+        </div>
+        <div class="cal-impact ${e.impact}">${e.impact}</div>
+        <div class="cal-forecast"><strong>${e.forecast}</strong><span class="prev">Prev: ${e.prev}</span></div>
+      </div>`).join('')}
+  `).join('');
+}
+
+function showIndiaNote(text) {
+  const note = document.getElementById('calIndiaNote');
+  if (text && text.trim()) {
+    note.textContent = text;
+    document.querySelector('.cal-india-note').style.borderColor = 'rgba(201,168,76,0.4)';
+  } else {
+    note.textContent = 'This event has limited direct impact on Indian markets — but monitor for global risk sentiment shifts.';
+    document.querySelector('.cal-india-note').style.borderColor = 'rgba(201,168,76,0.15)';
+  }
+}
+
+function renderArchive() {
+  const query = document.getElementById('archiveSearch')?.value.toLowerCase() || '';
+  const all = [...archiveAIIssues, ...archiveData];
+  let filtered = all.filter(i => {
+    const matchFilter = currentFilter === 'all' || i.tag === currentFilter || (currentFilter === 'AI Generated' && i.isAI);
+    const matchSearch = !query || i.title.toLowerCase().includes(query) || i.excerpt.toLowerCase().includes(query) || i.tag.toLowerCase().includes(query);
+    return matchFilter && matchSearch;
+  });
+  const visible = filtered.slice(0, archiveVisible);
+  document.getElementById('archiveStats').textContent = `Showing ${visible.length} of ${filtered.length} issues`;
+  document.getElementById('archiveGrid').innerHTML = visible.map(i => `
+    <div class="archive-card ${i.isAI ? 'ai-generated' : ''}">
+      ${i.isAI ? '<div class="ac-badge">AI Generated</div>' : ''}
+      <div class="ac-vol">${i.vol}</div>
+      <div class="ac-tag">${i.tag}</div>
+      <div class="ac-title">${i.title}</div>
+      <div class="ac-excerpt">${i.excerpt}</div>
+      <div class="ac-footer">
+        <div class="ac-date">${i.date} · ${i.readTime}</div>
+        <div class="ac-rating">${[1,2,3,4,5].map(s=>`<span class="star ${s<=i.rating?'filled':''}">★</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('loadMoreBtn').style.display = filtered.length > archiveVisible ? 'block' : 'none';
+}
+
+function filterArchive() { archiveVisible = 6; renderArchive(); }
+function setFilter(btn, f) {
+  document.querySelectorAll('.archive-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = f;
+  filterArchive();
+}
+function loadMoreArchive() { archiveVisible += 6; renderArchive(); }
+
+// ============================================================
+// SENTIMENT GAUGE
+// ============================================================
+function renderSentiment() {
+  const score = 58; // Neutral-Greed
+  const label = score < 25 ? 'Extreme Fear' : score < 45 ? 'Fear' : score < 55 ? 'Neutral' : score < 75 ? 'Greed' : 'Extreme Greed';
+  document.getElementById('sentimentScore').textContent = score;
+  document.getElementById('sentimentLabel').textContent = label;
+  const arc = document.getElementById('gaugeArc');
+  const offset = 283 - (283 * score / 100);
+  setTimeout(() => { arc.style.strokeDashoffset = offset; }, 300);
+  const angle = -90 + (score / 100 * 180);
+  setTimeout(() => { document.getElementById('gaugeNeedle').style.transform = `rotate(${angle}deg)`; }, 300);
+  const factors = [
+    { name: "Market Momentum", val: 68 }, { name: "Put/Call Ratio", val: 52 },
+    { name: "VIX Levels", val: 45 }, { name: "Safe Haven Demand", val: 41 },
+    { name: "Junk Bond Demand", val: 63 }, { name: "Breadth", val: 59 }
+  ];
+  document.getElementById('sentimentFactors').innerHTML = factors.map(f => `
+    <div class="sf-item">
+      <div class="sf-name">${f.name}</div>
+      <div class="sf-bar-wrap"><div class="sf-bar" style="width:${f.val}%"></div></div>
+      <div class="sf-val">${f.val}/100</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// AI NEWSLETTER GENERATOR
+// ============================================================
+// ============================================================
+// NEWS MODAL
+// ============================================================
+// ── Legacy openModal — safely falls back to live data ──────────
+function openModal(id) {
+  // Try live data first (primary path); NEWS_DATA removed in favour of live RSS
+  const liveItem = liveNewsData.find(x => x.id === id);
+  if (liveItem) { openLiveModal(id); return; }
+  // Nothing found — do nothing silently
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// MISC
+// ============================================================
+function toggleTheme() {
+  const body = document.body;
+  const btn  = document.getElementById('themeBtn');
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (body.classList.contains('light-mode')) {
+    // light → dark
+    body.classList.remove('light-mode');
+    body.classList.add('dark-mode');
+    btn.textContent = '☀ Light';
+  } else if (body.classList.contains('dark-mode')) {
+    // dark → system default
+    body.classList.remove('dark-mode');
+    btn.textContent = sysDark ? '☀ Light' : '◑ Dark';
+  } else {
+    // system → force light
+    body.classList.add('light-mode');
+    body.classList.remove('dark-mode');
+    btn.textContent = '◑ Dark';
+  }
+}
+
+// On load — set button label to reflect system preference
+(function() {
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = sysDark ? '☀ Light' : '◑ Dark';
+  // Listen for system changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    const body = document.body;
+    if (!body.classList.contains('light-mode') && !body.classList.contains('dark-mode')) {
+      const btn = document.getElementById('themeBtn');
+      if (btn) btn.textContent = e.matches ? '☀ Light' : '◑ Dark';
+    }
+  });
+})();
+function toggleMenu() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+function toggleTag(el) {
+  const selected = el.classList.toggle('selected');
+  el.setAttribute('aria-pressed', selected ? 'true' : 'false');
+}
+function handleSubmit(event) {
+  event.preventDefault();
+  const email = document.getElementById('semail').value.trim();
+  const name = document.getElementById('sname').value.trim();
+  const interests = [...document.querySelectorAll('.interest-tag.selected')].map(tag => tag.textContent.trim());
+  const errorMsg = document.getElementById('errorMsg');
+  if (!name || name.length < 2) { errorMsg.textContent = 'Please enter your name'; errorMsg.style.display = 'block'; return; }
+  if (!email || !email.includes('@')) { errorMsg.textContent = 'Please enter a valid email'; errorMsg.style.display = 'block'; return; }
+  errorMsg.style.display = 'none';
+  const form = document.getElementById('signupForm');
+  // Formspree: replace YOUR_FORM_ID below with your Formspree form ID (free at formspree.io)
+  const FORMSPREE_ID = 'xreoegaa';
+  fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ name: name, email: email, interests: interests })
+  })
+    .then(r => {
+      if (r.ok) { form.style.display='none'; document.getElementById('successMsg').style.display='block'; }
+      else { errorMsg.textContent = 'Submission failed. Please try again.'; errorMsg.style.display='block'; }
+    })
+    .catch(() => { errorMsg.textContent = 'Submission failed. Please try again.'; errorMsg.style.display='block'; });
+}
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+(function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+
+// CLOCK
+function updateClock() {
+  const n = new Date();
+  document.getElementById('clock').textContent = n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')+':'+n.getSeconds().toString().padStart(2,'0');
+}
+setInterval(updateClock, 1000); updateClock();
+
+// PROGRESS BAR
+window.addEventListener('scroll', () => {
+  const bar = document.getElementById('progress-bar');
+  const s = window.scrollY;
+  const h = document.body.scrollHeight - window.innerHeight;
+  bar.style.width = (s / h * 100) + '%';
+});
+
+// SCROLL REVEAL
+const obs = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+}), { threshold: 0.1 });
+document.querySelectorAll('.why-card,.cal-event,.news-item,.sidebar-card').forEach((el, i) => {
+  el.style.opacity='0'; el.style.transform='translateY(24px)';
+  el.style.transition=`opacity 0.6s ease ${(i%6)*0.07}s,transform 0.6s ease ${(i%6)*0.07}s,background 0.3s,border-color 0.3s`;
+  obs.observe(el);
+});
+
+// GEN TOPIC TOGGLE
+document.querySelectorAll('.gen-topic').forEach(t => {
+  t.addEventListener('click', () => t.classList.toggle('active'));
+});
+
+// ============================================================
+// INIT
+// ============================================================
+initCalendarTabs();
+renderCalendar();
+renderArchive();
+renderSentiment();
+
+// Fetch live news immediately, then auto-refresh every 30 minutes
+fetchLiveNews();
+setInterval(() => {
+  if (Date.now() - newsLastFetch > NEWS_REFRESH_MS) fetchLiveNews();
+}, NEWS_REFRESH_MS);
+
+
+
+
+// ============================================================
+// SUBSCRIBER COUNTER — animated count up to 1,247
+// ============================================================
+(function() {
+  const target = 1247;
+  const el = document.getElementById('subCount');
+  if (!el) return;
+  let current = 0;
+  const duration = 2200;
+  const start = performance.now();
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    current = Math.floor(eased * target);
+    el.textContent = current.toLocaleString('en-IN');
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString('en-IN');
+  }
+  // Start counter when banner enters viewport
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      requestAnimationFrame(step);
+      obs.disconnect();
+    }
+  }, { threshold: 0.3 });
+  obs.observe(el);
+})();
+
+// ============================================================
+// BACK TO TOP — show after 400px scroll
+// ============================================================
+const backToTopBtn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 400) backToTopBtn.classList.add('visible');
+  else backToTopBtn.classList.remove('visible');
+}, { passive: true });
+
+// ============================================================
+// SMOOTH PAGE TRANSITIONS — on internal nav link clicks
+// ============================================================
+(function() {
+  const overlay = document.getElementById('pageTransition');
+  if (!overlay) return;
+  // Trigger exit animation on page load (page just entered)
+  window.addEventListener('load', () => {
+    overlay.classList.add('exit');
+    setTimeout(() => overlay.classList.remove('exit'), 500);
+  });
+})();
+
+</script>
+
+<!-- BACK TO TOP -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="3,10 8,5 13,10"/>
+  </svg>
+</button>
+
+<!-- PAGE TRANSITION OVERLAY -->
+<div id="pageTransition"></div>
+
+</body>
+</html>
