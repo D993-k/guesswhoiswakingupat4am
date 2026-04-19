@@ -394,6 +394,38 @@
       from { transform: translateX(0); }
       to { transform: translateX(-50%); }
     }
+    .market-overview-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:2px;
+      margin-top:24px;
+    }
+    .mo-card {
+      background:var(--card-bg);
+      border:1px solid var(--border);
+      padding:20px 18px;
+    }
+    .mo-label {
+      font-family:'Space Mono',monospace;
+      font-size:9px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--dim);
+      margin-bottom:8px;
+    }
+    .mo-value {
+      font-family:'Space Mono',monospace;
+      font-size:22px;
+      color:var(--cream);
+      margin-bottom:8px;
+    }
+    .mo-change {
+      font-family:'Space Mono',monospace;
+      font-size:10px;
+      letter-spacing:0.1em;
+    }
+    .mo-change.up { color:var(--green); }
+    .mo-change.dn { color:var(--red); }
 
     /* HERO */
     .hero { min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:80px 48px 120px;position:relative;overflow:hidden; }
@@ -1018,21 +1050,21 @@
       <div class="ex-card"><div class="ex-region">Precious Metal</div><div class="ex-name">Gold</div><div class="ex-index">per oz · INR</div><div class="ex-val" id="gold-val">—</div><div class="ex-chg" id="gold-chg">Loading...</div></div>
       <div class="ex-card"><div class="ex-region">Precious Metal</div><div class="ex-name">Silver</div><div class="ex-index">per oz · INR</div><div class="ex-val" id="silver-val">—</div><div class="ex-chg" id="silver-chg">Loading...</div></div>
       <div class="ex-card"><div class="ex-region">Energy</div><div class="ex-name">Crude Oil</div><div class="ex-index">WTI · INR/bbl</div><div class="ex-val" id="oil-val">—</div><div class="ex-chg" id="oil-chg">Loading...</div></div>
+      <div class="ex-card"><div class="ex-region">Energy</div><div class="ex-name">Natural Gas</div><div class="ex-index">US · INR</div><div class="ex-val" id="gas-val">—</div><div class="ex-chg" id="gas-chg">Loading...</div></div>
       <div class="ex-card"><div class="ex-region">FX</div><div class="ex-name">USD / INR</div><div class="ex-index">Forex</div><div class="ex-val" id="usdinr-val">—</div><div class="ex-chg" id="usdinr-chg">Loading...</div></div>
       <div class="ex-card"><div class="ex-region">Crypto</div><div class="ex-name">Bitcoin</div><div class="ex-index">BTC · INR</div><div class="ex-val" id="btc-val">—</div><div class="ex-chg" id="btc-chg">Loading...</div></div>
-      <div class="ex-card"><div class="ex-region">Bond</div><div class="ex-name">10Y Treasury</div><div class="ex-index">US Yield</div><div class="ex-val" id="tnx-val">—</div><div class="ex-chg" id="tnx-chg">Loading...</div></div>
     </div>
   </div>
   <div style="margin-top:12px;font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);opacity:0.5;letter-spacing:0.1em;">
     Data via Yahoo Finance · INR conversion for dollar-priced assets · <span id="last-updated">Updating...</span>
   </div>
-  <div style="margin-top:24px;">
-    <div class="tradingview-widget-container" style="height:400px;">
-      <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-      {"colorTheme":"dark","dateRange":"1D","showChart":true,"locale":"en","isTransparent":true,"showSymbolLogo":true,"width":"100%","height":"400","tabs":[{"title":"Indices","symbols":[{"s":"NSE:NIFTY","d":"Nifty 50"},{"s":"BSE:SENSEX","d":"Sensex"},{"s":"FOREXCOM:SPXUSD","d":"S&P 500"},{"s":"FOREXCOM:NSXUSD","d":"Nasdaq 100"},{"s":"SPREADEX:FTSE","d":"FTSE 100"},{"s":"INDEX:NKY","d":"Nikkei 225"}],"originalTitle":"Indices"},{"title":"Commodities","symbols":[{"s":"TVC:GOLD","d":"Gold"},{"s":"TVC:SILVER","d":"Silver"},{"s":"NYMEX:CL1!","d":"Crude Oil"},{"s":"NYMEX:NG1!","d":"Natural Gas"}],"originalTitle":"Commodities"},{"title":"Crypto","symbols":[{"s":"COINBASE:BTCUSD","d":"Bitcoin"},{"s":"COINBASE:ETHUSD","d":"Ethereum"}],"originalTitle":"Crypto"},{"title":"FX","symbols":[{"s":"FX:USDINR","d":"USD/INR"},{"s":"FX:EURUSD","d":"EUR/USD"}],"originalTitle":"FX"}]}
-      </script>
-    </div>
+  <div class="market-overview-grid" aria-label="Market overview snapshot">
+    <div class="mo-card"><div class="mo-label">Nifty 50</div><div class="mo-value" id="mo-nifty-val">Loading...</div><div class="mo-change" id="mo-nifty-chg"></div></div>
+    <div class="mo-card"><div class="mo-label">Sensex</div><div class="mo-value" id="mo-sensex-val">Loading...</div><div class="mo-change" id="mo-sensex-chg"></div></div>
+    <div class="mo-card"><div class="mo-label">S&amp;P 500</div><div class="mo-value" id="mo-spx-val">Loading...</div><div class="mo-change" id="mo-spx-chg"></div></div>
+    <div class="mo-card"><div class="mo-label">Nasdaq</div><div class="mo-value" id="mo-ndx-val">Loading...</div><div class="mo-change" id="mo-ndx-chg"></div></div>
+    <div class="mo-card"><div class="mo-label">Crude Oil</div><div class="mo-value" id="mo-oil-val">Loading...</div><div class="mo-change" id="mo-oil-chg"></div></div>
+    <div class="mo-card"><div class="mo-label">Natural Gas</div><div class="mo-value" id="mo-gas-val">Loading...</div><div class="mo-change" id="mo-gas-chg"></div></div>
   </div>
   <script>
   (function(){
@@ -1073,6 +1105,16 @@
         }
       });
     }
+    function setOverviewCard(prefix, value, changePct){
+      const valueEl=document.getElementById(prefix+'-val');
+      const changeEl=document.getElementById(prefix+'-chg');
+      if(valueEl) valueEl.textContent=value;
+      if(changeEl&&typeof changePct==='number'){
+        const up=changePct>=0;
+        changeEl.textContent=(up?'▲ +':'▼ ')+Math.abs(changePct).toFixed(2)+'%';
+        changeEl.className='mo-change '+(up?'up':'dn');
+      }
+    }
     async function loadMarkets(){
       try{
         const resp=await fetch(MARKET_API,{cache:'no-store'});
@@ -1090,6 +1132,7 @@
         setCommodityCard('gold-val','gold-chg',comms.gold);
         setCommodityCard('silver-val','silver-chg',comms.silver);
         setCommodityCard('oil-val','oil-chg',comms.oil);
+        setCommodityCard('gas-val','gas-chg',comms.naturalGas);
         setCommodityCard('btc-val','btc-chg',comms.bitcoin);
 
         if(data.usdInr)setCard('usdinr-val','usdinr-chg',data.usdInr.price,data.usdInr.change,data.usdInr.changePct,'₹',2);
@@ -1098,6 +1141,13 @@
         if(idx.nifty) setTickerSeries(['ticker-nifty','ticker2-nifty','ticker3-nifty','ticker4-nifty','ticker5-nifty','ticker6-nifty','ticker7-nifty','ticker8-nifty'],'Nifty 50',idx.nifty.price.toLocaleString('en-IN',{maximumFractionDigits:2}),idx.nifty.changePct);
         if(comms.oil?.inrPrice) setTickerSeries(['ticker-oil','ticker2-oil','ticker3-oil','ticker4-oil','ticker5-oil','ticker6-oil','ticker7-oil','ticker8-oil'],'Crude Oil',fmt(comms.oil.inrPrice),comms.oil.changePct);
         if(data.usdInr) setTickerSeries(['ticker-usdinr','ticker2-usdinr','ticker3-usdinr','ticker4-usdinr','ticker5-usdinr','ticker6-usdinr','ticker7-usdinr','ticker8-usdinr'],'USD/INR','₹'+data.usdInr.price.toFixed(2),data.usdInr.changePct);
+
+        if(idx.nifty) setOverviewCard('mo-nifty',idx.nifty.price.toLocaleString('en-IN',{maximumFractionDigits:2}),idx.nifty.changePct);
+        if(idx.sensex) setOverviewCard('mo-sensex',idx.sensex.price.toLocaleString('en-IN',{maximumFractionDigits:2}),idx.sensex.changePct);
+        if(idx.spx) setOverviewCard('mo-spx',idx.spx.price.toLocaleString('en-IN',{maximumFractionDigits:2}),idx.spx.changePct);
+        if(idx.ndx) setOverviewCard('mo-ndx',idx.ndx.price.toLocaleString('en-IN',{maximumFractionDigits:2}),idx.ndx.changePct);
+        if(comms.oil?.inrPrice) setOverviewCard('mo-oil',fmt(comms.oil.inrPrice),comms.oil.changePct);
+        if(comms.naturalGas?.inrPrice) setOverviewCard('mo-gas',fmt(comms.naturalGas.inrPrice),comms.naturalGas.changePct);
 
         const upd=document.getElementById('last-updated');
         if(upd)upd.textContent='Last updated: '+new Date(data.updatedAt||Date.now()).toLocaleTimeString('en-IN');

@@ -8,6 +8,7 @@ const SYMBOL_MAP = {
   gold: "GC=F",
   silver: "SI=F",
   oil: "CL=F",
+  naturalGas: "NG=F",
   bitcoin: "BTC-USD",
   usdInr: "USDINR=X",
   treasury10y: "^TNX",
@@ -104,6 +105,24 @@ async function fetchOilFallback() {
   };
 }
 
+async function fetchNaturalGasFallback() {
+  const response = await fetch(OIL_DEMO_URL, {
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  const prices = data?.data?.prices || [];
+  const gas = prices.find((item) => item.code === "NATURAL_GAS_USD");
+  if (!gas || typeof gas.price !== "number") return null;
+  const change = typeof gas.change_24h === "number" ? gas.change_24h : 0;
+  const changePct = gas.price ? (change / gas.price) * 100 : 0;
+  return {
+    price: gas.price,
+    change,
+    changePct,
+  };
+}
+
 async function fetchUsdInrFallback() {
   const response = await fetch(USDINR_FALLBACK_URL, {
     headers: { Accept: "application/json" },
@@ -153,6 +172,11 @@ export default async function handler(req, res) {
         quotes.oil = await fetchOilFallback();
       } catch {}
     }
+    if (!quotes.naturalGas) {
+      try {
+        quotes.naturalGas = await fetchNaturalGasFallback();
+      } catch {}
+    }
     const fxRate = quotes.usdInr?.price || null;
 
     const withInrPrice = (quote) =>
@@ -173,6 +197,7 @@ export default async function handler(req, res) {
         gold: withInrPrice(quotes.gold),
         silver: withInrPrice(quotes.silver),
         oil: withInrPrice(quotes.oil),
+        naturalGas: withInrPrice(quotes.naturalGas),
         bitcoin: withInrPrice(quotes.bitcoin),
       },
       treasury10y: quotes.treasury10y,
