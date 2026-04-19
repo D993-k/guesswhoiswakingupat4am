@@ -982,6 +982,15 @@
   <script>
   (function(){
     const MARKET_API='/api/market';
+    let marketReadyResolved = false;
+    let resolveMarketReady;
+    window.the4amMarketsReady = new Promise(resolve => {
+      resolveMarketReady = () => {
+        if (marketReadyResolved) return;
+        marketReadyResolved = true;
+        resolve();
+      };
+    });
     function fmt(n,d=2){if(!n||isNaN(n))return'—';return n>=1e7?'₹'+(n/1e7).toFixed(2)+'Cr':n>=1e5?'₹'+(n/1e5).toFixed(2)+'L':n.toLocaleString('en-IN',{maximumFractionDigits:d});}
     function setCard(vi,ci,price,chg,pct,pre='',dec=2){const v=document.getElementById(vi);const c=document.getElementById(ci);if(!v||!c)return;v.textContent=pre+(price>=1000?price.toLocaleString('en-IN',{maximumFractionDigits:dec}):price.toFixed(dec));const up=pct>=0;c.textContent=(up?'▲ +':'▼ ')+Math.abs(pct).toFixed(2)+'%';c.className='ex-chg '+(up?'up':'dn');const card=v.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}
     function setCommodityCard(valueId, changeId, quote){
@@ -1021,9 +1030,11 @@
 
         const upd=document.getElementById('last-updated');
         if(upd)upd.textContent='Last updated: '+new Date(data.updatedAt||Date.now()).toLocaleTimeString('en-IN');
+        resolveMarketReady();
       }catch{
         const upd=document.getElementById('last-updated');
         if(upd)upd.textContent='Market data temporarily unavailable';
+        resolveMarketReady();
       }
     }
     loadMarkets();setInterval(loadMarkets,60000);
@@ -1428,10 +1439,16 @@
   }
 
   document.body.style.overflow = 'hidden';
-  const maxTimer = setTimeout(dismissPreloader, 3800);
-  window.addEventListener('load', () => {
+  const maxTimer = setTimeout(dismissPreloader, 7000);
+  window.addEventListener('load', async () => {
+    try {
+      await Promise.race([
+        window.the4amMarketsReady || Promise.resolve(),
+        new Promise(resolve => setTimeout(resolve, 5000))
+      ]);
+    } catch {}
     clearTimeout(maxTimer);
-    setTimeout(dismissPreloader, 600);
+    setTimeout(dismissPreloader, 250);
   });
 })();
 

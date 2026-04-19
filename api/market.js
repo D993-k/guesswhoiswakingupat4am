@@ -1,36 +1,53 @@
-const SYMBOLS = [
-  "^NSEI",
-  "^BSESN",
-  "^GSPC",
-  "^IXIC",
-  "^FTSE",
-  "^N225",
-  "GC=F",
-  "SI=F",
-  "CL=F",
-  "BTC-USD",
-  "USDINR=X",
-  "^TNX",
-];
+const SYMBOL_MAP = {
+  nifty: "^NSEI",
+  sensex: "^BSESN",
+  spx: "^GSPC",
+  ndx: "^IXIC",
+  ftse: "^FTSE",
+  nikkei: "^N225",
+  gold: "GC=F",
+  silver: "SI=F",
+  oil: "CL=F",
+  bitcoin: "BTC-USD",
+  usdInr: "USDINR=X",
+  treasury10y: "^TNX",
+};
 
-const QUOTE_URL =
-  "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" +
-  encodeURIComponent(SYMBOLS.join(","));
+function buildChartUrl(symbol) {
+  return `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
+    symbol
+  )}?interval=1d&range=1d`;
+}
 
-function pickQuote(resultMap, symbol) {
-  const item = resultMap[symbol];
-  if (!item) return null;
-  const price = item.regularMarketPrice;
-  const change = item.regularMarketChange;
-  const changePct = item.regularMarketChangePercent;
+async function fetchChartQuote(symbol) {
+  const response = await fetch(buildChartUrl(symbol), {
+    headers: {
+      "User-Agent": "the4am.finance market endpoint",
+      Accept: "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Quote fetch failed for ${symbol}`);
+  }
+
+  const data = await response.json();
+  const result = data?.chart?.result?.[0];
+  const meta = result?.meta;
   if (
-    typeof price !== "number" ||
-    typeof change !== "number" ||
-    typeof changePct !== "number"
+    !meta ||
+    typeof meta.regularMarketPrice !== "number" ||
+    typeof meta.regularMarketChange !== "number" ||
+    typeof meta.regularMarketChangePercent !== "number"
   ) {
     return null;
   }
-  return { price, change, changePct };
+
+  return {
+    price: meta.regularMarketPrice,
+    change: meta.regularMarketChange,
+    changePct: meta.regularMarketChangePercent,
+  };
 }
 
 export default async function handler(req, res) {
@@ -40,54 +57,46 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(QUOTE_URL, {
-      headers: {
-        "User-Agent": "the4am.finance market endpoint",
-        Accept: "application/json",
-      },
-    });
+    const entries = await Promise.all(
+      Object.entries(SYMBOL_MAP).map(async ([key, symbol]) => {
+        try {
+          const quote = await fetchChartQuote(symbol);
+          return [key, quote];
+        } catch {
+          return [key, null];
+        }
+      })
+    );
 
-    if (!response.ok) {
-      return res.status(502).json({ error: "Upstream quote fetch failed" });
-    }
+    const quotes = Object.fromEntries(entries);
+    const fxRate = quotes.usdInr?.price || null;
 
-    const data = await response.json();
-    const results = data?.quoteResponse?.result || [];
-    const resultMap = Object.fromEntries(results.map((item) => [item.symbol, item]));
-    const usdInr = pickQuote(resultMap, "USDINR=X");
-    const fxRate = usdInr?.price || null;
+    const withInrPrice = (quote) =>
+      quote && fxRate ? { ...quote, inrPrice: quote.price * fxRate } : null;
 
     const payload = {
       updatedAt: new Date().toISOString(),
-      usdInr,
+      usdInr: quotes.usdInr,
       indices: {
-        nifty: pickQuote(resultMap, "^NSEI"),
-        sensex: pickQuote(resultMap, "^BSESN"),
-        spx: pickQuote(resultMap, "^GSPC"),
-        ndx: pickQuote(resultMap, "^IXIC"),
-        ftse: pickQuote(resultMap, "^FTSE"),
-        nikkei: pickQuote(resultMap, "^N225"),
+        nifty: quotes.nifty,
+        sensex: quotes.sensex,
+        spx: quotes.spx,
+        ndx: quotes.ndx,
+        ftse: quotes.ftse,
+        nikkei: quotes.nikkei,
       },
       commodities: {
-        gold: fxRate && pickQuote(resultMap, "GC=F")
-          ? { ...pickQuote(resultMap, "GC=F"), inrPrice: pickQuote(resultMap, "GC=F").price * fxRate }
-          : null,
-        silver: fxRate && pickQuote(resultMap, "SI=F")
-          ? { ...pickQuote(resultMap, "SI=F"), inrPrice: pickQuote(resultMap, "SI=F").price * fxRate }
-          : null,
-        oil: fxRate && pickQuote(resultMap, "CL=F")
-          ? { ...pickQuote(resultMap, "CL=F"), inrPrice: pickQuote(resultMap, "CL=F").price * fxRate }
-          : null,
-        bitcoin: fxRate && pickQuote(resultMap, "BTC-USD")
-          ? { ...pickQuote(resultMap, "BTC-USD"), inrPrice: pickQuote(resultMap, "BTC-USD").price * fxRate }
-          : null,
+        gold: withInrPrice(quotes.gold),
+        silver: withInrPrice(quotes.silver),
+        oil: withInrPrice(quotes.oil),
+        bitcoin: withInrPrice(quotes.bitcoin),
       },
-      treasury10y: pickQuote(resultMap, "^TNX"),
+      treasury10y: quotes.treasury10y,
     };
 
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
     return res.status(200).json(payload);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ error: "Market endpoint failed" });
   }
 }
