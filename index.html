@@ -983,6 +983,7 @@
   (function(){
     const YAHOO_API='https://query1.finance.yahoo.com/v8/finance/chart/';
     const YAHOO_PROXY='https://api.allorigins.win/get?url=';
+    const USDINR_CACHE_KEY='the4am_usdinr_cache';
     function fmt(n,d=2){if(!n||isNaN(n))return'—';return n>=1e7?'₹'+(n/1e7).toFixed(2)+'Cr':n>=1e5?'₹'+(n/1e5).toFixed(2)+'L':n.toLocaleString('en-IN',{maximumFractionDigits:d});}
     async function fetchYahooQuote(sym){
       const url=YAHOO_API+encodeURIComponent(sym)+'?interval=1d&range=1d';
@@ -1000,16 +1001,25 @@
     }
     async function fetchQ(sym){try{const j=await fetchYahooQuote(sym);const q=j?.chart?.result?.[0];if(!q)return null;const m=q.meta;return{price:m.regularMarketPrice,change:m.regularMarketChange,changePct:m.regularMarketChangePercent};}catch{return null;}}
     function setCard(vi,ci,price,chg,pct,pre='',dec=2){const v=document.getElementById(vi);const c=document.getElementById(ci);if(!v||!c)return;v.textContent=pre+(price>=1000?price.toLocaleString('en-IN',{maximumFractionDigits:dec}):price.toFixed(dec));const up=pct>=0;c.textContent=(up?'▲ +':'▼ ')+Math.abs(pct).toFixed(2)+'%';c.className='ex-chg '+(up?'up':'dn');const card=v.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}
+    function getCachedUsdInr(){try{const raw=localStorage.getItem(USDINR_CACHE_KEY);if(!raw)return null;const parsed=JSON.parse(raw);return typeof parsed.price==='number'?parsed.price:null;}catch{return null;}}
+    function setCachedUsdInr(price){try{localStorage.setItem(USDINR_CACHE_KEY,JSON.stringify({price,timestamp:Date.now()}));}catch{}}
     async function loadMarkets(){
       const usd=await fetchQ('USDINR=X');
-      const usdInr=usd?.price||null;
+      if(usd?.price)setCachedUsdInr(usd.price);
+      const usdInr=usd?.price||getCachedUsdInr();
       const pairs=[['^NSEI','nifty-val','nifty-chg','',0],['^BSESN','sensex-val','sensex-chg','',0],['^GSPC','spx-val','spx-chg','',2],['^IXIC','ndx-val','ndx-chg','',2],['^FTSE','ftse-val','ftse-chg','',0],['^N225','nky-val','nky-chg','',0]];
       for(const[s,v,c,p,d]of pairs){const q=await fetchQ(s);if(q)setCard(v,c,q.price,q.change,q.changePct,p,d);}
       const comms=[['GC=F','gold-val','gold-chg'],['SI=F','silver-val','silver-chg'],['CL=F','oil-val','oil-chg'],['BTC-USD','btc-val','btc-chg']];
       for(const[s,v,c]of comms){const q=await fetchQ(s);if(q&&usdInr){const inr=q.price*usdInr;const el=document.getElementById(v);const chg=document.getElementById(c);if(el)el.textContent=fmt(inr);if(chg){const up=q.changePct>=0;chg.textContent=(up?'▲ +':'▼ ')+Math.abs(q.changePct).toFixed(2)+'%';chg.className='ex-chg '+(up?'up':'dn');const card=el?.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}}}
       if(usd)setCard('usdinr-val','usdinr-chg',usd.price,usd.change,usd.changePct,'₹',2);
+      else{
+        const usdVal=document.getElementById('usdinr-val');
+        const usdChg=document.getElementById('usdinr-chg');
+        if(usdVal&&usdInr)usdVal.textContent='₹'+usdInr.toFixed(2);
+        if(usdChg)usdChg.textContent=usdInr?'Using cached FX rate':'FX unavailable';
+      }
       const tnx=await fetchQ('^TNX');if(tnx)setCard('tnx-val','tnx-chg',tnx.price,tnx.change,tnx.changePct,'',3);
-      const upd=document.getElementById('last-updated');if(upd)upd.textContent='Last updated: '+new Date().toLocaleTimeString('en-IN');
+      const upd=document.getElementById('last-updated');if(upd)upd.textContent='Last updated: '+new Date().toLocaleTimeString('en-IN')+(usd?'':' · cached INR FX');
     }
     loadMarkets();setInterval(loadMarkets,60000);
   })();
