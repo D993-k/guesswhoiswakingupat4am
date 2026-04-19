@@ -1199,9 +1199,9 @@
 
 <!-- ECONOMIC CALENDAR -->
 <section class="calendar-section" id="calendar">
-  <div class="section-label">Global Economic Calendar</div>
+  <div class="section-label">India-First Economic Calendar</div>
   <p style="font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:28px;max-width:700px;">
-    All times in <strong style="color:var(--gold)">IST (India Standard Time)</strong>. Filtered for events that move Indian markets — Nifty, INR, bonds, and FII flows.
+    All times in <strong style="color:var(--gold)">IST (India Standard Time)</strong>. Built for an Indian audience first: roughly 80% India market drivers and 20% global events only when they materially move Nifty, INR, bonds, or FII flows.
   </p>
 
   <!-- Week tabs -->
@@ -1239,7 +1239,7 @@
   <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;">
     <div>
       <div class="section-label" style="margin-bottom:12px;">Market-Moving News</div>
-      <p style="font-size:14px;color:var(--dim);line-height:1.7;max-width:560px;">Live RSS feeds filtered for tier-1 macro events only — stories from the last 7 days that move bond markets, central bank policy, or FII flows. Auto-refreshes every 30 minutes.</p>
+      <p style="font-size:14px;color:var(--dim);line-height:1.7;max-width:560px;">Live RSS feeds weighted for India first: about 80% India and Indian-stock-market coverage, with the remaining space reserved for global events only when they matter to Indian investors. Auto-refreshes every 30 minutes.</p>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
       <div class="live-badge"><span class="live-dot"></span>Live Feed</div>
@@ -1623,30 +1623,28 @@ let archiveVisible  = 6;
 // ============================================================
 const CALENDAR_WEEKS = {
   'This Week': [
-    { day:'Monday, 10 Mar', time:'3:00 PM', flag:'🇺🇸', name:'US CPI (Feb)', label:'Consumer Price Index', region:'US', impact:'high', forecast:'2.9%', prev:'3.0%', indiaLinked:true, indiaImpact:'US CPI directly reprices Fed rate expectations. A hot CPI = fewer cuts = stronger USD = FII outflows from Nifty and rupee pressure. A cool CPI = INR rally, Nifty relief.' },
-    { day:'Monday, 10 Mar', time:'8:30 PM', flag:'🇺🇸', name:'US Core CPI (Feb)', label:'Ex-Food & Energy', region:'US', impact:'high', forecast:'3.2%', prev:'3.3%', indiaLinked:true, indiaImpact:'Core CPI is the Fed\'s primary inflation signal. Persistence above 3% delays any rate cut — keeping USD strong and EM capital flows constrained.' },
-    { day:'Tuesday, 11 Mar', time:'2:30 PM', flag:'🇬🇧', name:'UK GDP (Jan)', label:'Monthly GDP', region:'UK', impact:'medium', forecast:'0.1%', prev:'-0.1%', indiaLinked:false, indiaImpact:'UK GDP impacts EUR/USD via risk sentiment. Weak UK data = global growth fears = broad EM selloff including India.' },
-    { day:'Wednesday, 12 Mar', time:'6:00 PM', flag:'🇺🇸', name:'US PPI (Feb)', label:'Producer Price Index', region:'US', impact:'medium', forecast:'0.3%', prev:'0.4%', indiaLinked:true, indiaImpact:'PPI leads CPI by 1–2 months. Rising producer prices signal inflation persistence — compressing Fed easing expectations and keeping the DXY elevated.' },
-    { day:'Thursday, 13 Mar', time:'1:30 PM', flag:'🇪🇺', name:'ECB Rate Decision', label:'Eurozone Policy', region:'EU', impact:'high', forecast:'2.65%', prev:'2.90%', indiaLinked:true, indiaImpact:'ECB cut = EUR weakens = DXY rises = INR comes under pressure. The ECB\'s forward guidance matters more than the cut itself for EM flows.' },
-    { day:'Thursday, 13 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Jobless Claims', label:'Weekly Unemployment', region:'US', impact:'medium', forecast:'218K', prev:'221K', indiaLinked:false, indiaImpact:'Jobless claims influence Fed policy expectations. A sharp rise signals labour market softening — potentially pulling forward rate cuts and supporting EM inflows.' },
-    { day:'Friday, 14 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Retail Sales (Feb)', label:'Consumer Spending', region:'US', impact:'medium', forecast:'0.3%', prev:'-0.9%', indiaLinked:false, indiaImpact:'Strong retail sales = resilient US economy = Fed stays higher for longer = INR under pressure. A miss supports the Fed pivot narrative.' },
-    { day:'Friday, 14 Mar', time:'11:30 AM', flag:'🇮🇳', name:'India WPI (Feb)', label:'Wholesale Price Index', region:'IN', impact:'high', forecast:'2.4%', prev:'2.31%', indiaLinked:true, indiaImpact:'Direct India inflation print. WPI persistence above 2.5% constrains RBI\'s rate cut pace — bond yields stay elevated and rate-sensitive sectors underperform.' },
+    { day:'Monday, 21 Apr', time:'9:15 AM', flag:'🇮🇳', name:'Nifty & Bank Nifty Opening Flows', label:'FII / DII Pulse', region:'IN', impact:'medium', forecast:'Positive bias', prev:'Mixed', indiaLinked:true, indiaImpact:'Opening institutional flows often set the tone for Indian equities. Strong domestic buying can absorb foreign selling and keep Nifty leadership intact.' },
+    { day:'Tuesday, 22 Apr', time:'10:00 AM', flag:'🇮🇳', name:'India HSBC Manufacturing PMI Flash (Apr)', label:'Factory Momentum', region:'IN', impact:'high', forecast:'58.4', prev:'58.1', indiaLinked:true, indiaImpact:'A strong PMI supports earnings confidence for capital goods, autos, and banks. A surprise slowdown would raise questions on the pace of domestic demand.' },
+    { day:'Wednesday, 23 Apr', time:'2:30 PM', flag:'🇮🇳', name:'Reliance, HDFC Bank, ICICI Bank Earnings Watch', label:'Nifty Heavyweights', region:'IN', impact:'high', forecast:'Inline', prev:'Beat', indiaLinked:true, indiaImpact:'Heavyweight earnings often move the entire index because of their large Nifty weights. Margin commentary matters as much as the headline numbers.' },
+    { day:'Thursday, 24 Apr', time:'11:30 AM', flag:'🇮🇳', name:'India WPI Inflation (Mar)', label:'Wholesale Price Index', region:'IN', impact:'high', forecast:'2.6%', prev:'2.38%', indiaLinked:true, indiaImpact:'WPI feeds into margin expectations across industrial and consumer businesses. Sticky wholesale inflation also reduces the RBI\'s room to turn more dovish.' },
+    { day:'Friday, 25 Apr', time:'3:30 PM', flag:'🇮🇳', name:'FII / DII Weekly Positioning', label:'Cash Market Flow Check', region:'IN', impact:'medium', forecast:'Net DII support', prev:'Net FII sell', indiaLinked:true, indiaImpact:'Sustained FII selling pressures index valuations, but strong domestic SIP-driven flows can cushion corrections and sustain a buy-on-dips market.' },
+    { day:'Friday, 25 Apr', time:'6:00 PM', flag:'🇺🇸', name:'US Core PCE Preview', label:'Fed Inflation Signal', region:'US', impact:'high', forecast:'2.8%', prev:'2.8%', indiaLinked:true, indiaImpact:'Core PCE affects Fed-cut expectations, which then move the dollar and FII allocations to India. It stays on the calendar because it directly influences INR and risk appetite.' },
   ],
   'Next Week': [
-    { day:'Monday, 17 Mar', time:'All Day', flag:'🇮🇳', name:'India Trade Data (Feb)', label:'Exports & Imports', region:'IN', impact:'high', forecast:'—', prev:'$-23B', indiaLinked:true, indiaImpact:'Trade deficit directly impacts CAD. A widening deficit with high crude prices puts structural pressure on the rupee — RBI may need to intervene via forex reserves.' },
-    { day:'Tuesday, 18 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Building Permits', label:'Housing Sector', region:'US', impact:'low', forecast:'1.46M', prev:'1.47M', indiaLinked:false, indiaImpact:'Limited direct India impact. Proxy for US domestic growth confidence.' },
-    { day:'Wednesday, 19 Mar', time:'12:00 AM', flag:'🇯🇵', name:'BOJ Rate Decision', label:'Bank of Japan Policy', region:'JP', impact:'high', forecast:'0.50%', prev:'0.50%', indiaLinked:true, indiaImpact:'BOJ hikes = yen strengthens = carry trade unwinds = global risk-off = Nifty selloff. BOJ holds = yen stays weak = carry trades intact = EM inflows continue.' },
-    { day:'Wednesday, 19 Mar', time:'11:30 PM', flag:'🇺🇸', name:'FOMC Rate Decision', label:'Federal Reserve', region:'US', impact:'high', forecast:'4.25–4.50%', prev:'4.25–4.50%', indiaLinked:true, indiaImpact:'The single most important event for Indian markets. Fed holds = USD stays elevated. Any hint of cuts = INR rally + Nifty surge + FII inflows. Watch the dot plot.' },
-    { day:'Thursday, 20 Mar', time:'1:30 PM', flag:'🇬🇧', name:'Bank of England Decision', label:'BOE Policy Rate', region:'UK', impact:'medium', forecast:'4.50%', prev:'4.50%', indiaLinked:false, indiaImpact:'BOE cuts = GBP weakness = global DXY watch. Indirect impact via risk sentiment channel for EM assets.' },
-    { day:'Friday, 21 Mar', time:'2:00 PM', flag:'🇮🇳', name:'India PMI Flash (Mar)', label:'Manufacturing & Services', region:'IN', impact:'high', forecast:'57.2', prev:'56.3', indiaLinked:true, indiaImpact:'India PMI above 55 signals robust domestic demand — supporting the RBI\'s cautious stance and positive for rate-sensitive midcap and banking stocks.' },
+    { day:'Monday, 28 Apr', time:'All Day', flag:'🇮🇳', name:'India Monthly Auto Sales Preview', label:'Domestic Demand Tracker', region:'IN', impact:'medium', forecast:'Steady', prev:'Strong', indiaLinked:true, indiaImpact:'Auto dispatches are an early signal for urban and rural demand. They matter for autos, ancillaries, tyres, and consumer financing names.' },
+    { day:'Tuesday, 29 Apr', time:'4:00 PM', flag:'🇮🇳', name:'India Fiscal Deficit Update', label:'Government Finances', region:'IN', impact:'high', forecast:'Within target', prev:'On track', indiaLinked:true, indiaImpact:'Fiscal discipline shapes bond yields, PSU sentiment, and RBI liquidity expectations. A slippage worries both bond and equity investors.' },
+    { day:'Wednesday, 30 Apr', time:'8:00 AM', flag:'🇮🇳', name:'GST Collections (Apr)', label:'Tax Revenue Print', region:'IN', impact:'high', forecast:'₹1.84L Cr', prev:'₹1.78L Cr', indiaLinked:true, indiaImpact:'GST collections are one of the cleanest high-frequency indicators for India\'s formal economy. Strong prints support cyclicals, banks, and consumption names.' },
+    { day:'Thursday, 1 May', time:'5:30 PM', flag:'🇮🇳', name:'India Core Sector Growth', label:'Infrastructure Pulse', region:'IN', impact:'medium', forecast:'6.1%', prev:'6.7%', indiaLinked:true, indiaImpact:'Core sector data is a quick read on industrial momentum and capex execution. It affects metals, cement, power, and PSU-linked names.' },
+    { day:'Friday, 2 May', time:'10:00 AM', flag:'🇮🇳', name:'India HSBC Services PMI Flash (Apr)', label:'Services Activity', region:'IN', impact:'high', forecast:'60.1', prev:'61.2', indiaLinked:true, indiaImpact:'Services PMI matters because India\'s growth mix is services-heavy. It has direct read-through for banks, travel, consumption, and urban demand.' },
+    { day:'Friday, 2 May', time:'7:00 PM', flag:'🇺🇸', name:'US Non-Farm Payrolls (Apr)', label:'Jobs Report', region:'US', impact:'high', forecast:'185K', prev:'228K', indiaLinked:true, indiaImpact:'US payrolls still deserve a slot because they move the Fed path, US yields, and global risk-taking. Strong jobs can trigger FII caution toward India.' },
   ],
   'Last Week': [
-    { day:'Monday, 3 Mar', time:'3:00 PM', flag:'🇺🇸', name:'US ISM Manufacturing', label:'Factory Activity', region:'US', impact:'medium', forecast:'50.8', prev:'50.9', indiaLinked:false, indiaImpact:'US manufacturing PMI below 50 signals contraction — global trade slowdown risk, negative for Indian export-oriented sectors.' },
-    { day:'Wednesday, 5 Mar', time:'6:30 PM', flag:'🇺🇸', name:'ADP Employment (Feb)', label:'Private Payrolls', region:'US', impact:'medium', forecast:'140K', prev:'183K', indiaLinked:false, indiaImpact:'ADP is a leading indicator for Friday NFP. Weaker private payrolls increase the probability of a Fed pivot — positive for EM flows.' },
-    { day:'Thursday, 6 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Jobless Claims', label:'Weekly Unemployment', region:'US', impact:'medium', forecast:'225K', prev:'242K', indiaLinked:false, indiaImpact:'Persistent claims above 230K signal labour market softening — building the case for Fed rate cuts.' },
-    { day:'Friday, 7 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US NFP (Feb)', label:'Non-Farm Payrolls', region:'US', impact:'high', forecast:'155K', prev:'143K', indiaLinked:true, indiaImpact:'The most-watched US data point for Indian markets. A hot jobs print = Fed stays hawkish = USD up = Nifty down. A miss = pivot narrative = Nifty up 1–2%.' },
-    { day:'Friday, 7 Mar', time:'6:30 PM', flag:'🇺🇸', name:'US Unemployment Rate', label:'Headline Jobless Rate', region:'US', impact:'high', forecast:'4.1%', prev:'4.0%', indiaLinked:true, indiaImpact:'Rising unemployment signals Fed pivot. Each 0.1% rise in US unemployment = approx. $300–500M FII inflows into Indian equities historically.' },
-    { day:'Friday, 7 Mar', time:'2:30 PM', flag:'🇮🇳', name:'RBI MPC Minutes', label:'Monetary Policy', region:'IN', impact:'high', forecast:'Hold', prev:'6.25%', indiaLinked:true, indiaImpact:'RBI minutes reveal internal vote split and forward guidance nuances. Any shift toward neutral from accommodative would signal further cuts — bullish for bonds.' },
+    { day:'Monday, 14 Apr', time:'11:00 AM', flag:'🇮🇳', name:'India CPI Inflation (Mar)', label:'Retail Inflation', region:'IN', impact:'high', forecast:'4.9%', prev:'5.1%', indiaLinked:true, indiaImpact:'Retail inflation is the RBI\'s primary inflation anchor. A softer print supports rate-cut hopes and helps banks, NBFCs, and rate-sensitive sectors.' },
+    { day:'Tuesday, 15 Apr', time:'12:00 PM', flag:'🇮🇳', name:'India Trade Deficit (Mar)', label:'Exports & Imports', region:'IN', impact:'high', forecast:'$19.8B', prev:'$18.7B', indiaLinked:true, indiaImpact:'Trade data affects the rupee, CAD expectations, and the market\'s sensitivity to crude prices. A wider deficit usually hurts INR sentiment.' },
+    { day:'Wednesday, 16 Apr', time:'2:00 PM', flag:'🇮🇳', name:'TCS & Infosys Management Commentary', label:'IT Demand Readout', region:'IN', impact:'medium', forecast:'Cautious', prev:'Stable', indiaLinked:true, indiaImpact:'Large-cap IT commentary is a live proxy for global enterprise spending. It influences Nifty weighting, sentiment on exports, and margin expectations.' },
+    { day:'Thursday, 17 Apr', time:'11:30 AM', flag:'🇮🇳', name:'India Bank Credit & Deposit Growth', label:'Financial System Pulse', region:'IN', impact:'medium', forecast:'Healthy growth', prev:'Healthy growth', indiaLinked:true, indiaImpact:'Credit growth shapes banking earnings expectations and tells the market whether private capex and retail demand are still holding up.' },
+    { day:'Friday, 18 Apr', time:'3:30 PM', flag:'🇮🇳', name:'SEBI / Exchange Circular Watch', label:'Market Structure Updates', region:'IN', impact:'medium', forecast:'Routine', prev:'Routine', indiaLinked:true, indiaImpact:'Regulatory changes can quickly affect derivatives turnover, brokerages, market liquidity, and sentiment in frothier pockets of the market.' },
+    { day:'Friday, 18 Apr', time:'11:30 PM', flag:'🇺🇸', name:'Fed Speakers Roundup', label:'Global Liquidity Cue', region:'US', impact:'medium', forecast:'No shift', prev:'Hawkish tone', indiaLinked:true, indiaImpact:'Fed communication is kept in the mix because it can reprice the dollar and emerging-market flows overnight, including toward Indian equities.' },
   ],
 };
 
@@ -1679,17 +1677,15 @@ const NEWS_REFRESH_MS = 30 * 60 * 1000;  // 30 minutes
 const RSS_PROXY = 'https://api.allorigins.win/get?url=';
 
 const RSS_FEEDS = [
-  // Global macro / central banks
-  { url: 'https://feeds.reuters.com/reuters/businessNews',        source: 'Reuters',          region: 'Global'  },
-  { url: 'https://feeds.reuters.com/reuters/topNews',             source: 'Reuters',          region: 'Global'  },
   // India markets
   { url: 'https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms',  source: 'Economic Times', region: 'India' },
   { url: 'https://economictimes.indiatimes.com/news/economy/rssfeeds/1373380680.cms', source: 'Economic Times', region: 'India' },
   { url: 'https://www.moneycontrol.com/rss/marketreports.xml',   source: 'Moneycontrol',     region: 'India'   },
+  { url: 'https://www.moneycontrol.com/rss/business.xml',        source: 'Moneycontrol',     region: 'India'   },
+  // Global macro / central banks kept limited for relevance
+  { url: 'https://feeds.reuters.com/reuters/businessNews',        source: 'Reuters',          region: 'Global'  },
   // Commodities / energy
   { url: 'https://feeds.reuters.com/reuters/commoditiesNews',    source: 'Reuters',          region: 'Global'  },
-  // Crypto
-  { url: 'https://cointelegraph.com/rss',                        source: 'CoinTelegraph',    region: 'Crypto'  },
 ];
 
 // ── High-signal keywords — only articles matching these pass ──
@@ -1722,7 +1718,7 @@ function classifyArticle(title, desc) {
   const text = (title + ' ' + desc).toLowerCase();
   if (/federal reserve|fomc|fed rate|rbi|repo rate|ecb|boj|bank of england|central bank|rate cut|rate hike|monetary policy/.test(text)) return 'Central Banks';
   if (/tariff|trade war|geopolit|ukraine|middle east|sanctions|nato|opec|g7|g20/.test(text)) return 'Geopolitics';
-  if (/nifty|sensex|sebi|fii|dii|india gdp|union budget|rupee|inr|indian market/.test(text)) return 'India Markets';
+  if (/nifty|sensex|bank nifty|bse|nse|sebi|fii|dii|india gdp|union budget|rupee|inr|indian market|indian stocks|gst|wpi|cpi india|india earnings/.test(text)) return 'India Markets';
   if (/gold|silver|crude|oil|brent|wti|copper|iron ore|natural gas|commodity/.test(text)) return 'Commodities';
   if (/bitcoin|ethereum|crypto|blockchain|digital asset/.test(text)) return 'Crypto';
   if (/treasury yield|bond yield|10-year|yield curve|dollar index|dxy|forex|currency|fx/.test(text)) return 'Bonds & FX';
@@ -1824,6 +1820,36 @@ function getAgeLabel(date) {
   return date.toLocaleDateString('en-IN', {day:'numeric', month:'short'});
 }
 
+function isIndiaPriorityArticle(article) {
+  const text = `${article.title} ${article.summary} ${article.indiaAngle || ''}`.toLowerCase();
+  return article.region === 'India'
+    || article.tag === 'India Markets'
+    || /india|indian|nifty|sensex|bank nifty|nse|bse|rupee|inr|rbi|sebi|fii|dii|gst|wpi|cpi/.test(text);
+}
+
+function buildIndiaWeightedFeed(articles, totalLimit = 40) {
+  const indiaTarget = Math.max(1, Math.floor(totalLimit * 0.8));
+  const indiaStories = [];
+  const globalStories = [];
+
+  articles.forEach(article => {
+    if (isIndiaPriorityArticle(article)) indiaStories.push(article);
+    else globalStories.push(article);
+  });
+
+  const pickedIndia = indiaStories.slice(0, indiaTarget);
+  const remainingSlots = Math.max(0, totalLimit - pickedIndia.length);
+  const globalCap = Math.max(1, totalLimit - indiaTarget);
+  const pickedGlobal = globalStories.slice(0, Math.min(remainingSlots, globalCap));
+
+  if (pickedIndia.length + pickedGlobal.length < totalLimit) {
+    const extraIndia = indiaStories.slice(pickedIndia.length, totalLimit - pickedGlobal.length);
+    return [...pickedIndia, ...pickedGlobal, ...extraIndia].slice(0, totalLimit);
+  }
+
+  return [...pickedIndia, ...pickedGlobal].slice(0, totalLimit);
+}
+
 // ── Main fetch orchestrator ────────────────────────────────────
 async function fetchLiveNews() {
   // Show loading state
@@ -1866,9 +1892,9 @@ async function fetchLiveNews() {
     }
   });
 
-  // Sort by date (newest first), cap at 40 articles
+  // Sort by date (newest first), then enforce an India-first mix
   allArticles.sort((a, b) => b.pubDate - a.pubDate);
-  const capped = allArticles.slice(0, 40);
+  const capped = buildIndiaWeightedFeed(allArticles, 40);
 
   // Mark first as featured
   if (capped.length > 0) capped[0].featured = true;
