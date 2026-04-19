@@ -16,6 +16,8 @@ const SYMBOL_MAP = {
 const NSE_NIFTY_URL =
   "https://www.nseindia.com/static/products-services/indices-nifty50-index";
 const OIL_DEMO_URL = "https://api.oilpriceapi.com/v1/demo/prices";
+const USDINR_FALLBACK_URL =
+  "https://api.frankfurter.app/latest?from=USD&to=INR";
 
 function buildChartUrl(symbol) {
   return `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
@@ -102,6 +104,21 @@ async function fetchOilFallback() {
   };
 }
 
+async function fetchUsdInrFallback() {
+  const response = await fetch(USDINR_FALLBACK_URL, {
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  const rate = data?.rates?.INR;
+  if (typeof rate !== "number") return null;
+  return {
+    price: rate,
+    change: 0,
+    changePct: 0,
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -121,6 +138,11 @@ export default async function handler(req, res) {
     );
 
     const quotes = Object.fromEntries(entries);
+    if (!quotes.usdInr) {
+      try {
+        quotes.usdInr = await fetchUsdInrFallback();
+      } catch {}
+    }
     if (!quotes.nifty) {
       try {
         quotes.nifty = await fetchNiftyFallback();
