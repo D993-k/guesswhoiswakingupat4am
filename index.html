@@ -905,9 +905,9 @@
 
   <!-- Floating live data badges -->
   <div class="hero-badges" aria-hidden="true">
-    <div class="hero-badge"><span class="hb-dot hb-up"></span><span class="hb-label">BTC/USD</span><span class="hb-val">$71,240</span><span class="hb-chg-up">&#9650; +1.8%</span></div>
-    <div class="hero-badge"><span class="hb-dot hb-dn"></span><span class="hb-label">GOLD</span><span class="hb-val">$2,318</span><span class="hb-chg-dn">&#9660; &#8722;0.3%</span></div>
-    <div class="hero-badge"><span class="hb-dot hb-up"></span><span class="hb-label">USD/INR</span><span class="hb-val">83.42</span><span class="hb-chg-up">&#9650; +0.1%</span></div>
+    <div class="hero-badge"><span class="hb-dot hb-up"></span><span class="hb-label">BTC/INR</span><span class="hb-val">₹59,84,160</span><span class="hb-chg-up">&#9650; +1.8%</span></div>
+    <div class="hero-badge"><span class="hb-dot hb-dn"></span><span class="hb-label">GOLD/INR</span><span class="hb-val">₹1,94,712</span><span class="hb-chg-dn">&#9660; &#8722;0.3%</span></div>
+    <div class="hero-badge"><span class="hb-dot hb-up"></span><span class="hb-label">USD/INR</span><span class="hb-val">₹83.42</span><span class="hb-chg-up">&#9650; +0.1%</span></div>
   </div>
 
   <div class="proof-bar">
@@ -969,7 +969,7 @@
     </div>
   </div>
   <div style="margin-top:12px;font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);opacity:0.5;letter-spacing:0.1em;">
-    Data via Yahoo Finance · <span id="last-updated">Updating...</span>
+    Data via Yahoo Finance · INR conversion for dollar-priced assets · <span id="last-updated">Updating...</span>
   </div>
   <div style="margin-top:24px;">
     <div class="tradingview-widget-container" style="height:400px;">
@@ -981,18 +981,34 @@
   </div>
   <script>
   (function(){
-    const PROXY='https://query1.finance.yahoo.com/v8/finance/chart/';
+    const YAHOO_API='https://query1.finance.yahoo.com/v8/finance/chart/';
+    const YAHOO_PROXY='https://api.allorigins.win/get?url=';
     function fmt(n,d=2){if(!n||isNaN(n))return'—';return n>=1e7?'₹'+(n/1e7).toFixed(2)+'Cr':n>=1e5?'₹'+(n/1e5).toFixed(2)+'L':n.toLocaleString('en-IN',{maximumFractionDigits:d});}
-    async function fetchQ(sym){try{const r=await fetch(PROXY+encodeURIComponent(sym)+'?interval=1d&range=1d');const j=await r.json();const q=j?.chart?.result?.[0];if(!q)return null;const m=q.meta;return{price:m.regularMarketPrice,change:m.regularMarketChange,changePct:m.regularMarketChangePercent};}catch{return null;}}
+    async function fetchYahooQuote(sym){
+      const url=YAHOO_API+encodeURIComponent(sym)+'?interval=1d&range=1d';
+      try{
+        const r=await fetch(url);
+        if(!r.ok) throw new Error('direct failed');
+        return await r.json();
+      }catch{
+        try{
+          const pr=await fetch(YAHOO_PROXY+encodeURIComponent(url));
+          const pj=await pr.json();
+          return JSON.parse(pj.contents||'{}');
+        }catch{return null;}
+      }
+    }
+    async function fetchQ(sym){try{const j=await fetchYahooQuote(sym);const q=j?.chart?.result?.[0];if(!q)return null;const m=q.meta;return{price:m.regularMarketPrice,change:m.regularMarketChange,changePct:m.regularMarketChangePercent};}catch{return null;}}
     function setCard(vi,ci,price,chg,pct,pre='',dec=2){const v=document.getElementById(vi);const c=document.getElementById(ci);if(!v||!c)return;v.textContent=pre+(price>=1000?price.toLocaleString('en-IN',{maximumFractionDigits:dec}):price.toFixed(dec));const up=pct>=0;c.textContent=(up?'▲ +':'▼ ')+Math.abs(pct).toFixed(2)+'%';c.className='ex-chg '+(up?'up':'dn');const card=v.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}
     async function loadMarkets(){
-      const usdInr=(await fetchQ('USDINR=X'))?.price||84;
-      const pairs=[['%5ENSEI','nifty-val','nifty-chg','',0],['%5EBSESN','sensex-val','sensex-chg','',0],['%5EGSPC','spx-val','spx-chg','',2],['%5EIXIC','ndx-val','ndx-chg','',2],['%5EFTSE','ftse-val','ftse-chg','',0],['^N225','nky-val','nky-chg','',0]];
+      const usd=await fetchQ('USDINR=X');
+      const usdInr=usd?.price||null;
+      const pairs=[['^NSEI','nifty-val','nifty-chg','',0],['^BSESN','sensex-val','sensex-chg','',0],['^GSPC','spx-val','spx-chg','',2],['^IXIC','ndx-val','ndx-chg','',2],['^FTSE','ftse-val','ftse-chg','',0],['^N225','nky-val','nky-chg','',0]];
       for(const[s,v,c,p,d]of pairs){const q=await fetchQ(s);if(q)setCard(v,c,q.price,q.change,q.changePct,p,d);}
       const comms=[['GC=F','gold-val','gold-chg'],['SI=F','silver-val','silver-chg'],['CL=F','oil-val','oil-chg'],['BTC-USD','btc-val','btc-chg']];
-      for(const[s,v,c]of comms){const q=await fetchQ(s);if(q){const inr=q.price*usdInr;const el=document.getElementById(v);const chg=document.getElementById(c);if(el)el.textContent=fmt(inr);if(chg){const up=q.changePct>=0;chg.textContent=(up?'▲ +':'▼ ')+Math.abs(q.changePct).toFixed(2)+'%';chg.className='ex-chg '+(up?'up':'dn');const card=el?.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}}}
-      const usd=await fetchQ('USDINR=X');if(usd)setCard('usdinr-val','usdinr-chg',usd.price,usd.change,usd.changePct,'₹',2);
-      const tnx=await fetchQ('%5ETNX');if(tnx)setCard('tnx-val','tnx-chg',tnx.price,tnx.change,tnx.changePct,'',3);
+      for(const[s,v,c]of comms){const q=await fetchQ(s);if(q&&usdInr){const inr=q.price*usdInr;const el=document.getElementById(v);const chg=document.getElementById(c);if(el)el.textContent=fmt(inr);if(chg){const up=q.changePct>=0;chg.textContent=(up?'▲ +':'▼ ')+Math.abs(q.changePct).toFixed(2)+'%';chg.className='ex-chg '+(up?'up':'dn');const card=el?.closest('.ex-card');if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}}}}
+      if(usd)setCard('usdinr-val','usdinr-chg',usd.price,usd.change,usd.changePct,'₹',2);
+      const tnx=await fetchQ('^TNX');if(tnx)setCard('tnx-val','tnx-chg',tnx.price,tnx.change,tnx.changePct,'',3);
       const upd=document.getElementById('last-updated');if(upd)upd.textContent='Last updated: '+new Date().toLocaleTimeString('en-IN');
     }
     loadMarkets();setInterval(loadMarkets,60000);
@@ -2490,16 +2506,16 @@ setInterval(() => {
 
   // Live-update hero badge values with slight random drift (visual realism)
   const badgeVals = [
-    { el: document.querySelector('.hero-badge:nth-child(1) .hb-val'), base: 71240, prefix: '$', dec: 0 },
-    { el: document.querySelector('.hero-badge:nth-child(2) .hb-val'), base: 2318,  prefix: '$', dec: 0 },
-    { el: document.querySelector('.hero-badge:nth-child(3) .hb-val'), base: 83.42, prefix: '',  dec: 2 },
+    { el: document.querySelector('.hero-badge:nth-child(1) .hb-val'), base: 5984160, prefix: '₹', dec: 0 },
+    { el: document.querySelector('.hero-badge:nth-child(2) .hb-val'), base: 194712,  prefix: '₹', dec: 0 },
+    { el: document.querySelector('.hero-badge:nth-child(3) .hb-val'), base: 83.42, prefix: '₹',  dec: 2 },
   ];
   setInterval(() => {
     badgeVals.forEach(bv => {
       if (!bv.el) return;
       const drift = (Math.random() - 0.5) * (bv.base * 0.002);
       const newVal = bv.base + drift;
-      bv.el.textContent = bv.prefix + newVal.toLocaleString('en-US', { minimumFractionDigits: bv.dec, maximumFractionDigits: bv.dec });
+      bv.el.textContent = bv.prefix + newVal.toLocaleString('en-IN', { minimumFractionDigits: bv.dec, maximumFractionDigits: bv.dec });
     });
   }, 4000);
 })();
