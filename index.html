@@ -361,8 +361,39 @@
     .theme-toggle:hover { border-color:var(--gold);color:var(--gold); }
 
     /* TICKER */
-    .tv-ticker-wrap { margin-top:61px;border-bottom:1px solid var(--border); }
+    .tv-ticker-wrap { margin-top:61px;border-bottom:1px solid var(--border); overflow:hidden; }
     .tv-ticker-wrap.band2 { margin-top:0;border-top:1px solid rgba(201,168,76,0.08);border-bottom:none; }
+    .custom-ticker {
+      display:flex;
+      width:max-content;
+      min-width:100%;
+      animation:tickerScroll 28s linear infinite;
+      will-change:transform;
+      padding:12px 0;
+    }
+    .custom-ticker:hover { animation-play-state: paused; }
+    .custom-ticker-group { display:flex; align-items:center; gap:18px; padding-right:18px; }
+    .ticker-item {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+      padding:0 16px;
+      border-right:1px solid rgba(201,168,76,0.12);
+      font-family:'Space Mono',monospace;
+      font-size:10px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:var(--dim);
+    }
+    .ticker-label { color:var(--cream); opacity:0.85; }
+    .ticker-value { color:var(--gold); }
+    .ticker-change.up { color:var(--green); }
+    .ticker-change.dn { color:var(--red); }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
 
     /* HERO */
     .hero { min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:80px 48px 120px;position:relative;overflow:hidden; }
@@ -842,11 +873,23 @@
 
 <!-- TICKER 1 -->
 <div class="tv-ticker-wrap">
-  <div class="tradingview-widget-container">
-    <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-    {"symbols":[{"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},{"proName":"FOREXCOM:NSXUSD","title":"Nasdaq 100"},{"description":"Nifty 50","proName":"NSE:NIFTY"},{"description":"Sensex","proName":"BSE:SENSEX"},{"description":"FTSE 100","proName":"SPREADEX:FTSE"},{"description":"Nikkei","proName":"INDEX:NKY"},{"description":"EUR/USD","proName":"FX:EURUSD"},{"description":"USD/INR","proName":"FX:USDINR"},{"description":"Gold","proName":"TVC:GOLD"},{"description":"Crude Oil","proName":"NYMEX:CL1!"}],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"dark","locale":"en"}
-    </script>
+  <div class="custom-ticker" aria-label="Live market ticker">
+    <div class="custom-ticker-group">
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker-nifty-val">Loading...</span><span class="ticker-change" id="ticker-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker-oil-val">Loading...</span><span class="ticker-change" id="ticker-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker-usdinr-val">Loading...</span><span class="ticker-change" id="ticker-usdinr-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker2-nifty-val">Loading...</span><span class="ticker-change" id="ticker2-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker2-oil-val">Loading...</span><span class="ticker-change" id="ticker2-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker2-usdinr-val">Loading...</span><span class="ticker-change" id="ticker2-usdinr-chg"></span></div>
+    </div>
+    <div class="custom-ticker-group" aria-hidden="true">
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker3-nifty-val">Loading...</span><span class="ticker-change" id="ticker3-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker3-oil-val">Loading...</span><span class="ticker-change" id="ticker3-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker3-usdinr-val">Loading...</span><span class="ticker-change" id="ticker3-usdinr-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker4-nifty-val">Loading...</span><span class="ticker-change" id="ticker4-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker4-oil-val">Loading...</span><span class="ticker-change" id="ticker4-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker4-usdinr-val">Loading...</span><span class="ticker-change" id="ticker4-usdinr-chg"></span></div>
+    </div>
   </div>
 </div>
 
@@ -923,11 +966,23 @@
 
 <!-- TICKER 2 -->
 <div class="tv-ticker-wrap band2">
-  <div class="tradingview-widget-container">
-    <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-    {"symbols":[{"description":"Bitcoin","proName":"COINBASE:BTCUSD"},{"description":"Ethereum","proName":"COINBASE:ETHUSD"},{"description":"Gold","proName":"TVC:GOLD"},{"description":"Silver","proName":"TVC:SILVER"},{"description":"WTI Crude","proName":"NYMEX:CL1!"},{"description":"10Y Treasury","proName":"TVC:US10Y"}],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"dark","locale":"en"}
-    </script>
+  <div class="custom-ticker" aria-label="Supplementary market ticker" style="animation-direction:reverse;animation-duration:32s;">
+    <div class="custom-ticker-group">
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker5-nifty-val">Loading...</span><span class="ticker-change" id="ticker5-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker5-oil-val">Loading...</span><span class="ticker-change" id="ticker5-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker5-usdinr-val">Loading...</span><span class="ticker-change" id="ticker5-usdinr-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker6-nifty-val">Loading...</span><span class="ticker-change" id="ticker6-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker6-oil-val">Loading...</span><span class="ticker-change" id="ticker6-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker6-usdinr-val">Loading...</span><span class="ticker-change" id="ticker6-usdinr-chg"></span></div>
+    </div>
+    <div class="custom-ticker-group" aria-hidden="true">
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker7-nifty-val">Loading...</span><span class="ticker-change" id="ticker7-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker7-oil-val">Loading...</span><span class="ticker-change" id="ticker7-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker7-usdinr-val">Loading...</span><span class="ticker-change" id="ticker7-usdinr-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Nifty 50</span><span class="ticker-value" id="ticker8-nifty-val">Loading...</span><span class="ticker-change" id="ticker8-nifty-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">Crude Oil</span><span class="ticker-value" id="ticker8-oil-val">Loading...</span><span class="ticker-change" id="ticker8-oil-chg"></span></div>
+      <div class="ticker-item"><span class="ticker-label">USD/INR</span><span class="ticker-value" id="ticker8-usdinr-val">Loading...</span><span class="ticker-change" id="ticker8-usdinr-chg"></span></div>
+    </div>
   </div>
 </div>
 
@@ -1006,6 +1061,18 @@
         if(card){card.classList.toggle('up',up);card.classList.toggle('dn',!up);}
       }
     }
+    function setTickerSeries(prefixes, label, value, changePct){
+      prefixes.forEach(prefix => {
+        const valueEl=document.getElementById(prefix+'-val');
+        const changeEl=document.getElementById(prefix+'-chg');
+        if(valueEl) valueEl.textContent=value;
+        if(changeEl&&typeof changePct==='number'){
+          const up=changePct>=0;
+          changeEl.textContent=(up?'▲ +':'▼ ')+Math.abs(changePct).toFixed(2)+'%';
+          changeEl.className='ticker-change '+(up?'up':'dn');
+        }
+      });
+    }
     async function loadMarkets(){
       try{
         const resp=await fetch(MARKET_API,{cache:'no-store'});
@@ -1027,6 +1094,10 @@
 
         if(data.usdInr)setCard('usdinr-val','usdinr-chg',data.usdInr.price,data.usdInr.change,data.usdInr.changePct,'₹',2);
         if(data.treasury10y)setCard('tnx-val','tnx-chg',data.treasury10y.price,data.treasury10y.change,data.treasury10y.changePct,'',3);
+
+        if(idx.nifty) setTickerSeries(['ticker-nifty','ticker2-nifty','ticker3-nifty','ticker4-nifty','ticker5-nifty','ticker6-nifty','ticker7-nifty','ticker8-nifty'],'Nifty 50',idx.nifty.price.toLocaleString('en-IN',{maximumFractionDigits:2}),idx.nifty.changePct);
+        if(comms.oil?.inrPrice) setTickerSeries(['ticker-oil','ticker2-oil','ticker3-oil','ticker4-oil','ticker5-oil','ticker6-oil','ticker7-oil','ticker8-oil'],'Crude Oil',fmt(comms.oil.inrPrice),comms.oil.changePct);
+        if(data.usdInr) setTickerSeries(['ticker-usdinr','ticker2-usdinr','ticker3-usdinr','ticker4-usdinr','ticker5-usdinr','ticker6-usdinr','ticker7-usdinr','ticker8-usdinr'],'USD/INR','₹'+data.usdInr.price.toFixed(2),data.usdInr.changePct);
 
         const upd=document.getElementById('last-updated');
         if(upd)upd.textContent='Last updated: '+new Date(data.updatedAt||Date.now()).toLocaleTimeString('en-IN');
